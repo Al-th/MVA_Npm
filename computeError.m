@@ -31,7 +31,8 @@ Tr = [R , T; 0 0 0 1];
 
 d = (b-Tr*a);
 
-mid = Cb + R*Ca*R';
+%mid = Cb + R*Ca*R';
+mid = eye(3,3);
 
 %remove homogeneous coordinate of d
 
