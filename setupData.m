@@ -4,9 +4,9 @@ function [A,B] = setupData(degX,degY,degZ,Tx,Ty,Tz)
     
     bunny = load('bunny.asc');
 
-    theta_x = degtorad(degX);
-    theta_y = degtorad(degY);
-    theta_z = degtorad(degZ);
+    theta_x = deg2rad(degX);
+    theta_y = deg2rad(degY);
+    theta_z = deg2rad(degZ);
 
     Rx = [1 0 0 ; 0 cos(theta_x) -sin(theta_x); 0 sin(theta_x) cos(theta_x)];
     Ry = [cos(theta_y) 0 sin(theta_y); 0 1 0; -sin(theta_y) 0 cos(theta_y)];
