@@ -1,4 +1,4 @@
-function reshapedCov = getCov(pointCloud,nbNeighbors)
+function covPointCloud = getCov(pointCloud,nbNeighbors)
     epsilon = 1e-5;
     treeInitPointCloud = kdtree_build(pointCloud);
     reshapedCov = zeros(size(pointCloud,1),9);
@@ -20,6 +20,6 @@ function reshapedCov = getCov(pointCloud,nbNeighbors)
         S = diag([epsilon,1,1]);
 
         reformedCov = U*S*U';
-        reshapedCov(i,:) = reshape(reformedCov',1,9);
+        covPointCloud(i,:,:) = reformedCov;
     end
 end

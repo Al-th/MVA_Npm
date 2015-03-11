@@ -1,17 +1,35 @@
-nbNeighbors = 20;
-% A n*3
-% B n*3
+init;
+setupData;
 
-covA = getCov(A,nbNeigh
+nbNeighbors = 20;
+iterMax = 250;
+dMax = 1;
+
 %%
+
+tic
+covA = getCov(A, nbNeighbors);
+covB = getCov(B, nbNeighbors);
+toc
+
+%%
+transformation0 = zeros(6,1);
+transformation0(1) = degtorad(20);
+transformation0(2) = degtorad(15);
+transformation0(3) = degtorad(65);
+
 transformation = transformation0;
 for i = 1:iterMax
+    M = computeTransformationMatrixFromParams(transformation);
+    
+    A_trans = transformPointCloud(A,M);
+    
     %Find the closest point b <=> T*ai
     % idx t.q A = B(idx);
-    tree = kdtree_build(B);
+    tree = kdtree_build(B_trans);
     closestPointIndex = zeros(size(A,1),1);
     for j = 1:size(A,1)
-        idx = kdtree_k_nearest_neighbors(tree,T*A(i,:),1);
+        idx = kdtree_k_nearest_neighbors(tree,A_trans(j,:),1);
         closestPointIndex(j) = idx;
     end
     
@@ -26,14 +44,15 @@ for i = 1:iterMax
     
     nbSubset = 0;
     for j = 1:size(A,1)
-        distanceBetweenPair = norm(A-transformation*B(closestPointIndex(j)),2);
+
+        distanceBetweenPair = norm(A((closestPointIndex(j) - p2(1:3),2);
         if(distanceBetweenPair < dMax)
            nbSubset = nbSubset + 1;
-           param{1}.point(i,:) = A(i,:);
-           param{2}.point(i,:) = B(i,:);
+           param{1}.point(nbSubset,:) = A((closestPointIndex(j),:);
+           param{2}.point(nbSubset,:) = B(j),:);
            
-           param{1}.cov = covA(i,:);
-           param{2}.cov = covB(i,:);
+           param{1}.cov(nbSubset,:) = covA((closestPointIndex(j),:);
+           param{2}.cov(nbSubset,:) = covB(j),:);
         end
     end
     % Reduce param to subset only
@@ -44,6 +63,12 @@ for i = 1:iterMax
     
     f = @(x)costFunction(x,param);
     
-    [transformation, cost] = fminunc(f,transformation);
+    hybridOptions =optimset('Display','iter','LargeScale','off','MaxFunEvals',100);
+    
+    [transformation, cost] = fminunc(f,transformation,hybridOptions);
+    
+    N = computeTransformationMatrixFromParams(transformation);
+    B = N(1:3,1:3)
+    
     
 end

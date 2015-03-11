@@ -3,7 +3,7 @@ function atomicError = computeError(transformation,p1 ,cov1 ,p2 ,cov2)
 alpha = transformation(1);
 beta = transformation(2);
 gamma = transformation(3);
-Tx = transformation(4)
+Tx = transformation(4);
 Ty = transformation(5);
 Tz = transformation(6);
 
@@ -12,8 +12,8 @@ a = [p1';1];
 b = [p2';1];
 
 %Reshape covariance matrices
-Ca = reshape(cov1,3,3)';
-Cb = reshape(cov2,3,3)';
+Ca = cov1;
+Cb = cov2;
 
 %Compute rotation and translation matrixmatrix
 calpha = cos(alpha); salpha = sin(alpha);
@@ -27,18 +27,18 @@ R = [calpha*cbeta, calpha*sbeta*sgamma-salpha*cgamma, calpha*sbeta*cgamma+salpha
 T = [Tx;Ty;Tz];
 
 %Homogeneous 3D rigid transformation
-Tr = [R];
-Tr = [R,T];
-Tr = [Tr; 0 0 0 1];
+Tr = [R , T; 0 0 0 1];
 
-d = (b-Tr*a)
+d = (b-Tr*a);
 
 mid = Cb + R*Ca*R';
-invMid = inv(mid);
+
+%invMid = inv(mid);
+invMid = eye(3,3);
 
 %remove homogeneous coordinate of d
 
-d = d(1:end-1));
+d = d(1:end-1);
 atomicError = d'*invMid*d;
 
 
