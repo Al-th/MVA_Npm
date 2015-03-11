@@ -4,7 +4,9 @@ function [A,B] = setupData(degX,degY,degZ,Tx,Ty,Tz)
     
     bunny = load('bunny.asc');
     
+    
     bunny = bunny(1:10:end,:);
+
     
     
     theta_x = deg2rad(degX);

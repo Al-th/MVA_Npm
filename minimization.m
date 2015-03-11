@@ -1,6 +1,6 @@
-function [A_trans,transformation] = minimization(A,B)
+function [A_trans, transformation] = minimization(A,B)
     nbNeighbors = 20;
-    iterMax = 250;
+    iterMax = 200;
     dMax = 0.1;
     transformation0 = zeros(6,1);
     tree = kdtree_build(B);
@@ -26,7 +26,7 @@ function [A_trans,transformation] = minimization(A,B)
     for i = 1:iterMax
         A_trans = transformPointCloud(A,transformation);
         
-        step = 1;
+        step = 10;
         ind = [1:step:size(A,1)];
         scatter3(B(ind,1),B(ind,2),B(ind,3),15,'o','filled');
         hold on
@@ -75,6 +75,7 @@ function [A_trans,transformation] = minimization(A,B)
         [transformation, ~] = fminunc(f,transformation,struct('Display', 'iter', 'LargeScale','off','TolFun',1e-6,'TolX',1e-4));
         radtodeg(transformation(1:3))
         transformation(4:6)
+        
     end
     
 end
