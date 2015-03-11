@@ -1,8 +1,8 @@
 function atomicError = computeError(transformation,p1 ,cov1 ,p2 ,cov2)
 %Get the parameters
-alpha = transformation(1);
+alpha = transformation(3);
 beta = transformation(2);
-gamma = transformation(3);
+gamma = transformation(1);
 Tx = transformation(4);
 Ty = transformation(5);
 Tz = transformation(6);
