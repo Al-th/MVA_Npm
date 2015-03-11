@@ -1,0 +1,18 @@
+function error = computeError(transformation,points)
+%Get the parameters
+alpha = transformation(1);
+beta = transformation(2);
+gamma = transformation(3);
+Tx = transformation(4)
+Ty = transformation(5);
+Tz = transformation(6);
+
+Ca = points.Ca;
+Cb = points.Cb;
+%Compute rotation matrix
+R = [,,;,,;,,]
+
+mid = Cb + R*
+
+
+end

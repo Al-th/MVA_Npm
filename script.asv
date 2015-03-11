@@ -1,0 +1,44 @@
+clear;
+clc;
+bunny = load('bunny.asc');
+
+%%
+step = 10;
+ind = [1:step:size(bunny,1)]
+scatter3(bunny(ind,1),bunny(ind,2),bunny(ind,3),15,'o','filled');
+
+%%
+%Computation of normals at all points;
+normal = zeros(size(bunny,1),3);
+tic
+parfor pIndex = 1:size(bunny,1)
+    nbNeigh = 20;
+    %1. N nearest neighbors - Euclidean distance
+    dMap = sqrt((bunny(:,1)-bunny(pIndex,1)).^2 + (bunny(:,2)-bunny(pIndex,2)).^2 + (bunny(:,3)-bunny(pIndex,3)).^2);
+    dMap = (dMap-min(dMap))/(max(dMap)-min(dMap));
+    [~,indexClosestPoint] = sort(dMap);
+    neigh = indexClosestPoint(1:nbNeigh);
+
+    %2. Calcul de la matrice de covariance 
+    barycenter = (1/nbNeigh)*sum(bunny(neigh,:));
+
+    covMat = zeros(3,3);
+    for i = 1:nbNeigh
+       covMat = covMat +  (bunny(neigh(i),:)-barycenter)'*(bunny(neigh(i),:)-barycenter);
+    end
+    covMat = (1/nbNeigh)*covMat;
+    %3. Plus petit vp de la matrice de covariance
+    [U,~,~] = svd(covMat);
+    normal(pIndex,:) = U(:,3)'./20;
+end
+toc;
+disp('Normal calculated');
+%%
+clc
+step = 10;
+ind = [1:step:size(bunny,1)]
+scatter3(bunny(ind,1),bunny(ind,2),bunny(ind,3),15,'o','filled');
+axis([-0.1,0.1,0,0.2,-0.1,0.1])
+hold on
+quiver3(bunny(ind,1),bunny(ind,2),bunny(ind,3),bunny(ind,1)+normal(ind,1),bunny(ind,2)+normal(ind,2),bunny(ind,3)+normal(ind,3));
+hold off
