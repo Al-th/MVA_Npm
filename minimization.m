@@ -1,6 +1,6 @@
 function [A_trans] = minimization(A,B)
     nbNeighbors = 20;
-    iterMax = 250;
+    iterMax = 2;
     dMax = 20;
     transformation0 = zeros(6,1);
     tree = kdtree_build(B);
@@ -27,7 +27,7 @@ function [A_trans] = minimization(A,B)
         A_trans = transformPointCloud(A,transformation);
         
         step = 10;
-        ind = [1:step:size(A,1)]
+        ind = [1:step:size(A,1)];
         scatter3(B(ind,1),B(ind,2),B(ind,3),15,'o','filled');
         hold on
         scatter3(A_trans(ind,1),A_trans(ind,2),A_trans(ind,3),15,'o','filled');
@@ -39,7 +39,7 @@ function [A_trans] = minimization(A,B)
         %Find the closest point of T*ai in the space spanned by B
         closestPointIndexInB = zeros(size(A_trans,1),1);
         for j = 1:size(A,1)
-            closestPointIndexInB(j) = kdtree_k_nearest_neighbors(tree,A_trans(j,:),1);;
+            closestPointIndexInB(j) = kdtree_k_nearest_neighbors(tree,A_trans(j,:),1);
         end
 
         

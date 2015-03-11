@@ -3,10 +3,14 @@ function [A,B] = setupData(degX,degY,degZ,Tx,Ty,Tz)
     %Use rotation and translation to compute new bunny
     
     bunny = load('bunny.asc');
-
-    theta_x = deg2rad(degX);
-    theta_y = deg2rad(degY);
-    theta_z = deg2rad(degZ);
+    
+    
+    bunny = bunny(1:10:end,:);
+    size_bunny = size(bunny,1);
+    
+    theta_x = degtorad(degX);
+    theta_y = degtorad(degY);
+    theta_z = degtorad(degZ);
 
     Rx = [1 0 0 ; 0 cos(theta_x) -sin(theta_x); 0 sin(theta_x) cos(theta_x)];
     Ry = [cos(theta_y) 0 sin(theta_y); 0 1 0; -sin(theta_y) 0 cos(theta_y)];
@@ -15,9 +19,9 @@ function [A,B] = setupData(degX,degY,degZ,Tx,Ty,Tz)
     T = [Tx;Ty;Tz];
 
     bunny_transRota = (Rx*Ry*Rz)*bunny';
-    bunny_transRota = bunny_transRota' + repmat(T',30571,1);
+    bunny_transRota = bunny_transRota' + repmat(T',size_bunny,1);
 
-    bunny_transRota = bunny_transRota + randn(30571,3)/1000;
+    bunny_transRota = bunny_transRota + randn(size_bunny,3)/1000;
 
     A = bunny;
     B = bunny_transRota;
