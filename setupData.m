@@ -1,4 +1,7 @@
 function [A,B] = setupData(degX,degY,degZ,Tx,Ty,Tz)
+    %Load bunny
+    %Use rotation and translation to compute new bunny
+    
     bunny = load('bunny.asc');
 
     theta_x = degtorad(degX);

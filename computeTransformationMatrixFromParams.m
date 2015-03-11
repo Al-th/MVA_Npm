@@ -7,7 +7,7 @@ Ty = params(5);
 Tz = params(6);
 
 
-%Compute rotation and translation matrixmatrix
+%Compute rotation and translation matrices
 calpha = cos(alpha); salpha = sin(alpha);
 cbeta = cos(beta); sbeta = sin(beta);
 cgamma = cos(gamma); sgamma = sin(gamma);
