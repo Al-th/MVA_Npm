@@ -17,7 +17,7 @@ function [A,B] = setupData(degX,degY,degZ,Tx,Ty,Tz)
     bunny_transRota = (Rx*Ry*Rz)*bunny';
     bunny_transRota = bunny_transRota' + repmat(T',30571,1);
 
-    bunny_transRota = bunny_transRota; %+ randn(30571,3)/100000;
+    bunny_transRota = bunny_transRota + randn(30571,3)/1000;
 
     A = bunny;
     B = bunny_transRota;

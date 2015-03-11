@@ -12,8 +12,8 @@ a = [p1';1];
 b = [p2';1];
 
 %Reshape covariance matrices
-Ca = reshape(cov1,3,3)';
-Cb = reshape(cov2,3,3)';
+Ca = cov1;
+Cb = cov2;
 
 %Compute rotation and translation matrixmatrix
 calpha = cos(alpha); salpha = sin(alpha);
@@ -39,7 +39,7 @@ invMid = eye(3,3);
 %remove homogeneous coordinate of d
 
 d = d(1:end-1);
-atomicError = d'*invMid*d;
+atomicError = d'*(mid\*d;
 
 
 end

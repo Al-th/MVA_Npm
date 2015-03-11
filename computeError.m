@@ -33,13 +33,10 @@ d = (b-Tr*a);
 
 mid = Cb + R*Ca*R';
 
-%invMid = inv(mid);
-invMid = eye(3,3);
-
 %remove homogeneous coordinate of d
 
 d = d(1:end-1);
-atomicError = d'*invMid*d;
+atomicError = d'*(mid\d);
 
 
 end
