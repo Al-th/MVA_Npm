@@ -1,13 +1,12 @@
-function [A_trans, transformation] = minimization(A,B)
-    nbNeighbors = 20;
+function [A_trans, transformation] = minimization(A,covA,B,covB,groundTruthTransformation)
+   
     iterMax = 200;
     dMax = 0.1;
     transformation0 = zeros(6,1);
     tree = kdtree_build(B);
 
     %Precompute covariance matrices for each point in the point clouds
-    covA = getCov(A, nbNeighbors);  
-    covB = getCov(B, nbNeighbors);
+
     
     %Define a cost function that is the sum of the atomic error of each
     %pair of points
@@ -26,7 +25,8 @@ function [A_trans, transformation] = minimization(A,B)
     for i = 1:iterMax
         A_trans = transformPointCloud(A,transformation);
         
-        step = 10;
+        figure(1);
+        step = 1;
         ind = [1:step:size(A,1)];
         scatter3(B(ind,1),B(ind,2),B(ind,3),15,'o','filled');
         hold on
@@ -73,6 +73,17 @@ function [A_trans, transformation] = minimization(A,B)
         f = @(x)costFunction(x,param);
   
         [transformation, ~] = fminunc(f,transformation,struct('Display', 'iter', 'LargeScale','off','TolFun',1e-6,'TolX',1e-4));
+       
+        figure(2);
+        hold on;
+        plot(i,radtodeg(transformation(1))-groundTruthTransformation(1),'rx');
+        plot(i,radtodeg(transformation(2))-groundTruthTransformation(2),'gx');
+        plot(i,radtodeg(transformation(3))-groundTruthTransformation(3),'bx');
+        plot(i,transformation(4)-groundTruthTransformation(4),'ro');
+        plot(i,transformation(5)-groundTruthTransformation(5),'go');
+        plot(i,transformation(6)-groundTruthTransformation(6),'bo');
+        hold off;
+        
         radtodeg(transformation(1:3))
         transformation(4:6)
         
