@@ -1,6 +1,7 @@
-function [A_trans, transformation, transformation_evolution] = minimization(A,covA,B,covB,groundTruthTransformation,iterMax,dMax)
+function [A_trans, transformation, transformation_evolution] = minimization(A,covA,B,covB,groundTruthTransformation,iterMax,dMax,useGenICP)
    
     transformation0 = zeros(6,1);
+    transformation0(2) = degtorad(35);
     transformation_evolution = [transformation0];
     tree = kdtree_build(B);
 
@@ -14,8 +15,8 @@ function [A_trans, transformation, transformation_evolution] = minimization(A,co
         for pairIndex = 1:size(param{1}.point,1)
            cost = cost + computeError(transformation, ...
                param{1}.point(pairIndex,:), squeeze(param{1}.cov(pairIndex,:,:)), ...
-               param{2}.point(pairIndex,:), squeeze(param{2}.cov(pairIndex,:,:))...
-               ); 
+               param{2}.point(pairIndex,:), squeeze(param{2}.cov(pairIndex,:,:)),...
+               useGenICP); 
         end
     end
 
@@ -78,7 +79,7 @@ function [A_trans, transformation, transformation_evolution] = minimization(A,co
 
         f = @(x)costFunction(x,param);
   
-        [transformation, dist] = fminunc(f,transformation,struct('Display', 'iter', 'LargeScale','off','TolFun',1e-6,'TolX',1e-4));
+        [transformation, dist] = fminunc(f,transformation,struct('Display', 'iter', 'LargeScale','off','TolFun',1e-6,'TolX',1e-10));
         eps = lastDist - dist;
         lastDist = dist;
         

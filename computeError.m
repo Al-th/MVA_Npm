@@ -1,4 +1,4 @@
-function atomicError = computeError(transformation,p1 ,cov1 ,p2 ,cov2)
+function atomicError = computeError(transformation,p1 ,cov1 ,p2 ,cov2, useGenICP)
 %Get the parameters
 alpha = transformation(3);
 beta = transformation(2);
@@ -31,8 +31,13 @@ Tr = [R , T; 0 0 0 1];
 
 d = (b-Tr*a);
 
-%mid = Cb + R*Ca*R';
-mid = eye(3,3);
+if (useGenICP)
+    disp('Using genIcp')
+    mid = Cb + R*Ca*R';
+else
+    disp('Not using genIcp')
+    mid = eye(3,3);
+end
 
 %remove homogeneous coordinate of d
 
