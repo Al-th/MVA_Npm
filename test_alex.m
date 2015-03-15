@@ -17,12 +17,12 @@ covB = covB(1:10:end,:,:);
 [A,covA,poseA] = loadDBData('data/hannover1/scan000',nbNeighbors);
 [B,covB,poseB] = loadDBData('data/hannover1/scan004',nbNeighbors);
 
-gtTransform(1) = poseB(1)-poseA(1)
-gtTransform(2) = poseB(2)-poseA(2)
-gtTransform(3) = poseB(3)-poseA(3)
-gtTransform(4) = poseB(4)-poseA(4)
-gtTransform(5) = poseB(5)-poseA(5)
-gtTransform(6) = poseB(6)-poseA(6)
+gtTransform(1) = poseB(1,1)-poseA(1,1)
+gtTransform(2) = poseB(1,2)-poseA(1,2)
+gtTransform(3) = poseB(1,3)-poseA(1,3)
+gtTransform(4) = poseB(2,1)-poseA(2,1)
+gtTransform(5) = poseB(2,2)-poseA(2,2)
+gtTransform(6) = poseB(2,3)-poseA(2,3)
 
 %Subsample 
 A = A(1:10:end,:);
