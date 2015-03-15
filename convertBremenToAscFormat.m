@@ -1,12 +1,10 @@
-%script to transform 3d file in asc file 
- list_file = dir('./data/Bremen/*.3d');
+%script to move 3d file in asc file 
+ list_file = dir('./data/hannover1/*.3d');
  
- for i = 1:size(list_file,1)
-     
-    filename = list_file(i).name;
-    pc3d = load3dfile(['./data/Bremen/',filename]);
-    
+ for id = 1:length(list_file)
+ 
+    filename = list_file(id).name;
     [~,name,~] = fileparts(filename);
-    dlmwrite(['./data/',name,'.asc'],pc3d);
+    movefile(['./data/hannover1/',list_file(id).name],['./data/hannover1/', name, '.asc']); 
      
  end
