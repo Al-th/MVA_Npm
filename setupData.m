@@ -6,9 +6,9 @@ function [A,covA,B,covB] = setupData(degX,degY,degZ,Tx,Ty,Tz,nbNeighbors)
     
     bunny = load('bunny.asc');
 
-    theta_x = deg2rad(degX);
-    theta_y = deg2rad(degY);
-    theta_z = deg2rad(degZ);
+    theta_x = degtorad(degX);
+    theta_y = degtorad(degY);
+    theta_z = degtorad(degZ);
     
     
     bunny_transRota = transformPointCloud(bunny,[theta_x,theta_y,theta_z,Tx,Ty,Tz]);
