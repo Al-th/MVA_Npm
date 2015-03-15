@@ -14,6 +14,6 @@ B = B(1:10:end,:);
 covB = covB(1:10:end,:,:);
 
 %%
-[A_trans,transformation] = minimization(A,covA,B,covB,gtTransform);
+[A_trans,transformation] = minimization(A,covA,B,covB,gtTransform,50,0.1);
 %A_trans = ICP_ClosedForm(A,B);
 
