@@ -25,16 +25,17 @@ function [A_trans, transformation, transformation_evolution] = minimization(A,co
     lastDist = 10000;
     for i = 1:iterMax
         eps
-        if (eps < 1e-5)
+        if (abs(eps) < 5e-5)
             break
         end
         A_trans = transformPointCloud(A,transformation);
         
         figure(1);
         step = 1;
-        ind = [1:step:size(A,1)];
+        ind = [1:step:size(B,1)];
         scatter3(B(ind,1),B(ind,2),B(ind,3),15,'o','filled');
         hold on
+        ind = [1:step:size(A_trans,1)];
         scatter3(A_trans(ind,1),A_trans(ind,2),A_trans(ind,3),15,'o','filled');
         hold off;
         pause(0.2);
