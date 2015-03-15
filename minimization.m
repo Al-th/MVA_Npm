@@ -1,7 +1,5 @@
-function [A_trans, transformation] = minimization(A,covA,B,covB,groundTruthTransformation)
+function [A_trans, transformation, transformation_evolution] = minimization(A,covA,B,covB,groundTruthTransformation,iterMax,dMax)
    
-    iterMax = 200;
-    dMax = 0.1;
     transformation0 = zeros(6,1);
     tree = kdtree_build(B);
 
@@ -73,13 +71,15 @@ function [A_trans, transformation] = minimization(A,covA,B,covB,groundTruthTrans
         f = @(x)costFunction(x,param);
   
         [transformation, ~] = fminunc(f,transformation,struct('Display', 'iter', 'LargeScale','off','TolFun',1e-6,'TolX',1e-4));
-       
+        
+        
         figure(2);
         hold on;
-        plot(i,radtodeg(transformation(1))-groundTruthTransformation(1),'rx');
-        plot(i,radtodeg(transformation(2))-groundTruthTransformation(2),'gx');
-        plot(i,radtodeg(transformation(3))-groundTruthTransformation(3),'bx');
+        plot(i,radtodeg(transformation(1))-groundTruthTransformation(1),'ro');
+        plot(i,radtodeg(transformation(2))-groundTruthTransformation(2),'go');
+        plot(i,radtodeg(transformation(3))-groundTruthTransformation(3),'bo');
         hold off;
+        
         figure(3);
         hold on;
         plot(i,transformation(4)-groundTruthTransformation(4),'ro');
@@ -90,6 +90,7 @@ function [A_trans, transformation] = minimization(A,covA,B,covB,groundTruthTrans
         radtodeg(transformation(1:3))
         transformation(4:6)
         
+        transformation_evolution = [transformation_evolution, transformation];
     end
     
 end
