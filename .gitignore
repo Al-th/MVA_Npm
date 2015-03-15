@@ -4,6 +4,6 @@
 
 *.3d
 *.frames
-*.pose
+data/Bremen/*.*
 *.asv
 data/pose1/fullscan.asc
