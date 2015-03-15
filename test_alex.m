@@ -24,6 +24,9 @@ gtTransform(4) = poseA(1,1)-poseB(1,1)
 gtTransform(5) = poseA(1,2)-poseB(1,2)
 gtTransform(6) = poseA(1,3)-poseB(1,3)
 
+clear poseA;
+clear poseB;
+
 %Subsample 
 A = A(1:5:end,:);
 covA = covA(1:5:end,:,:);
@@ -35,6 +38,10 @@ covB = covB(1:5:end,:,:);
 %%
 close all;
 clf;
-[A_trans,transformation] = minimization(A,covA,B,covB,gtTransform,100,1000,true);
+
+initTransform = zeros(6,1);
+initTransform(2) = degtorad(35);
+
+[A_trans,transformation] = minimization(A,covA,B,covB,gtTransform,initTransform,100,1000,true);
 %A_trans = ICP_ClosedForm(A,B);
 

@@ -32,10 +32,8 @@ Tr = [R , T; 0 0 0 1];
 d = (b-Tr*a);
 
 if (useGenICP)
-    disp('Using genIcp')
     mid = Cb + R*Ca*R';
 else
-    disp('Not using genIcp')
     mid = eye(3,3);
 end
 
