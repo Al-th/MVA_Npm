@@ -1,6 +1,7 @@
 function [A_trans, transformation, transformation_evolution] = minimization(A,covA,B,covB,groundTruthTransformation,iterMax,dMax)
    
     transformation0 = zeros(6,1);
+    transformation_evolution = [transformation0];
     tree = kdtree_build(B);
 
     %Precompute covariance matrices for each point in the point clouds
@@ -20,7 +21,13 @@ function [A_trans, transformation, transformation_evolution] = minimization(A,co
 
     %Set up the initial transformation
     transformation = transformation0;
+    eps = 10000;
+    lastDist = 10000;
     for i = 1:iterMax
+        eps
+        if (eps < 1e-5)
+            break
+        end
         A_trans = transformPointCloud(A,transformation);
         
         figure(1);
@@ -70,8 +77,9 @@ function [A_trans, transformation, transformation_evolution] = minimization(A,co
 
         f = @(x)costFunction(x,param);
   
-        [transformation, ~] = fminunc(f,transformation,struct('Display', 'iter', 'LargeScale','off','TolFun',1e-6,'TolX',1e-4));
-        
+        [transformation, dist] = fminunc(f,transformation,struct('Display', 'iter', 'LargeScale','off','TolFun',1e-6,'TolX',1e-4));
+        eps = lastDist - dist;
+        lastDist = dist;
         
         figure(2);
         hold on;
