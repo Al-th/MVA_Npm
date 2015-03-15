@@ -80,7 +80,7 @@ function [A_trans, transformation, transformation_evolution] = minimization(A,co
 
         f = @(x)costFunction(x,param);
   
-        [transformation, dist] = fminunc(f,transformation,struct('Display', 'iter', 'LargeScale','off','TolFun',1e-6,'TolX',1e-10));
+        [transformation, dist] = fminunc(f,transformation,struct('Display', 'off', 'LargeScale','off','TolFun',1e-6,'TolX',1e-10));
         eps = lastDist - dist;
         lastDist = dist;
         
