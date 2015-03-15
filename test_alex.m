@@ -14,15 +14,16 @@ B = B(1:10:end,:);
 covB = covB(1:10:end,:,:);
 
 %%
+clc
 [A,covA,poseA] = loadDBData('data/hannover1/scan000',nbNeighbors);
-[B,covB,poseB] = loadDBData('data/hannover1/scan004',nbNeighbors);
+[B,covB,poseB] = loadDBData('data/hannover1/scan005',nbNeighbors);
 
-gtTransform(1) = poseA(2,1)-poseB(2,1)
-gtTransform(2) = poseA(2,2)-poseB(2,2)
-gtTransform(3) = poseA(2,3)-poseB(2,3)
-gtTransform(4) = poseA(1,1)-poseB(1,1)
-gtTransform(5) = poseA(1,2)-poseB(1,2)
-gtTransform(6) = poseA(1,3)-poseB(1,3)
+gtTransform(1) = poseA(2,1)-poseB(2,1);
+gtTransform(2) = poseA(2,2)-poseB(2,2);
+gtTransform(3) = poseA(2,3)-poseB(2,3);
+gtTransform(4) = poseA(1,1)-poseB(1,1);
+gtTransform(5) = poseA(1,2)-poseB(1,2);
+gtTransform(6) = poseA(1,3)-poseB(1,3);
 
 clear poseA;
 clear poseB;
@@ -39,9 +40,15 @@ covB = covB(1:5:end,:,:);
 close all;
 clf;
 
-initTransform = zeros(6,1);
-initTransform(2) = degtorad(35);
+initTransform = gtTransform;
 
-[A_trans,transformation] = minimization(A,covA,B,covB,gtTransform,initTransform,100,1000,true);
-%A_trans = ICP_ClosedForm(A,B);
+initTransform(1:3) = degtorad(initTransform(1:3))
+initTransform(2) = initTransform(2)-degtorad(15);
+initTransform(4) = -initTransform(4)+20;
+initTransform(6) = initTransform(6)+10;
+
+
+
+%[A_trans,transformation] = minimization(A,covA,B,covB,gtTransform,initTransform,100,1000,true);
+A_trans = ICP_ClosedForm(A,B,initTransform,100,300);
 

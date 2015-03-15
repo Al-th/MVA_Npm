@@ -1,45 +1,61 @@
-function A_Trans = ICP_closedForm(A,B)
-objective = B;
-current = A;
-distanceThreshold = 1;
+function current = ICP_closedForm(A,B,initTransform,iterMax,dMax)
 
-for i = 1:10
-    step = 10;
-    ind = [1:step:size(A,1)];
-    scatter3(objective(ind,1),objective(ind,2),objective(ind,3),15,'o','filled');
+A = transformPointCloud(A,initTransform);
+tree = kdtree_build(B);
+current = A;
+
+for i = 1:iterMax
+    
+    step = 1;
+    ind = [1:step:size(B,1)];
+    scatter3(B(ind,1),B(ind,2),B(ind,3),15,'o','filled');
     hold on
+    ind = [1:step:size(current,1)];
     scatter3(current(ind,1),current(ind,2),current(ind,3),15,'o','filled');
     hold off;
-    pause();
-    currentTrimmed =[];
-    objectiveTrimmed = [];
-    distance = current-objective;
-    nbValidPoints = 0;
-    currentTrimmed = zeros(size(current,1),size(current,2));
-    objectiveTrimmed = zeros(size(objective,1),size(objective,2));
-    for i = 1:size(current,1)
-       pointDistance = norm(distance(i,:)); 
-       if (pointDistance < distanceThreshold)
-        nbValidPoints = nbValidPoints +1;
-        currentTrimmed(nbValidPoints,:) = current(i,:);
-        objectiveTrimmed(nbValidPoints,:) = objective(i,:);
-       end
+    pause(0.1);
+    
+    
+    %Find the closest point of T*ai in the space spanned by B
+    closestPointIndexInB = zeros(size(current,1),1);
+    for j = 1:size(A,1)
+        closestPointIndexInB(j) = kdtree_k_nearest_neighbors(tree,current(j,:),1);
     end
-    currentTrimmed = currentTrimmed(1:nbValidPoints,:);
-    objectiveTrimmed = objectiveTrimmed(1:nbValidPoints,:);
-    nbValidPoints
+
+
+    %Remove from set points that are too far
+    % if abs(A - B(idx)) < dMax : on garde
+    % fill the param (points, normals, covar);
+    param{1}.point = zeros(size(current,1),size(current,2));
+    param{2}.point = zeros(size(B,1),size(B,2));
+
+    nbSubset = 0;
+    for j = 1:size(A,1)
+        distanceBetweenPair = norm(current(j,:) - B(closestPointIndexInB(j),:),2);
+        if(distanceBetweenPair < dMax)
+            nbSubset = nbSubset + 1;
+            param{1}.point(nbSubset,:) = current(j,:);
+            param{2}.point(nbSubset,:) = B(closestPointIndexInB(j),:);
+        end
+    end
+    nbSubset
+    % Reduce param to subset only
+    param{1}.point = param{1}.point(1:nbSubset,:);
+    param{2}.point = param{2}.point(1:nbSubset,:);
+    
+    
     b = zeros(1,3);
     bp = zeros(1,3);
-    for i = 1:size(currentTrimmed,1)
-        b = b+currentTrimmed(i,:);
-        bp = bp+objectiveTrimmed(i,:);
+    for i = 1:size(param{1}.point,1)
+        b = b+param{1}.point(i,:);
+        bp = bp+param{2}.point(i,:);
     end
-    b = b/size(currentTrimmed,1);
-    bp = bp/size(objectiveTrimmed,1);
+    b = b/size(param{1}.point,1);
+    bp = bp/size(param{2}.point,1);
 
     H = zeros(3,3);
-    for i = 1:size(currentTrimmed,1)
-       H = H+(objectiveTrimmed(i,:)-bp)'*(currentTrimmed(i,:)-b); 
+    for i = 1:size(param{1}.point,1)
+       H = H+(param{2}.point(i,:)-bp)'*(param{1}.point(i,:)-b); 
     end
 
     [U,S,V] = svd(H);
@@ -50,5 +66,4 @@ for i = 1:10
     current = (R_est'*current')' - repmat(t_est',size(current,1),1);
     
 end
-A_trans = current
 end
