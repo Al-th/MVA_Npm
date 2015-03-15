@@ -79,6 +79,9 @@ function [A_trans, transformation] = minimization(A,covA,B,covB,groundTruthTrans
         plot(i,radtodeg(transformation(1))-groundTruthTransformation(1),'rx');
         plot(i,radtodeg(transformation(2))-groundTruthTransformation(2),'gx');
         plot(i,radtodeg(transformation(3))-groundTruthTransformation(3),'bx');
+        hold off;
+        figure(3);
+        hold on;
         plot(i,transformation(4)-groundTruthTransformation(4),'ro');
         plot(i,transformation(5)-groundTruthTransformation(5),'go');
         plot(i,transformation(6)-groundTruthTransformation(6),'bo');
