@@ -1,8 +1,8 @@
 function atomicError = computeError(transformation,p1 ,cov1 ,p2 ,cov2)
 %Get the parameters
-alpha = transformation(1);
+alpha = transformation(3);
 beta = transformation(2);
-gamma = transformation(3);
+gamma = transformation(1);
 Tx = transformation(4);
 Ty = transformation(5);
 Tz = transformation(6);
@@ -31,8 +31,8 @@ Tr = [R , T; 0 0 0 1];
 
 d = (b-Tr*a);
 
-%mid = Cb + R*Ca*R';
-mid = eye(3,3);
+mid = Cb + R*Ca*R';
+%mid = eye(3,3);
 
 %remove homogeneous coordinate of d
 
