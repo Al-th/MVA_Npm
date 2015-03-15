@@ -16,7 +16,7 @@ gtTransform = [-10,10,3,0.1,-0.05,0.03]
 %%%Standard ICP%%%
 %Bunny
 
-%Bremen
+%Hannover
 
 %%%GICP%%%
 %Bunny 
@@ -27,18 +27,19 @@ time_bunny_gicp_dmax = [];
 for i = 1:size(dMax,2)
     tic
     [A_trans,transformation] = minimization(A,covA,B,covB,gtTransform,iterMax,dMax);
-    time_bunny_gicp_dmax(i) = toc
+    time_bunny_gicp_dmax(i) = toc;
     err_bunny_gicp_dmax(i) = norm(B-A_trans,2);
 end
-%Bremen
-
-
+%Hannover
+scan001 = load('./data/hannover1/scan001.asc');
+scan003 = load('./data/hannover1/scan004.asc');
+gtEstimateTransformHannov = load('./data/hannover1//scan004.pose');
+gtEstimateTransformHannov = [ gtEstimateTransformHannov(4:6), gtEstimateTransformHannov(1:3)];
 %%%Point 2 Plane%%%
 
 %Bunny
 
-%Bremen
-
+%Hannover
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Influence de l'offset (la transformation entre les 2 nuages de points)
 
