@@ -27,21 +27,22 @@ function [A_trans, transformation_evolution, size_subset] = minimization(A,covA,
 
     eps = 10000.0;
     lastDist = 10000;
-    fprintf('epsilon ');
     for i = 1:iterMax
-        fprintf('%.2d ',eps);
+        [radtodeg(transformation(1:3)) transformation(4:6)]
+         
+        
         if (abs(eps) < 5e-5)
             break
         end
         
         if i > 1
-            diffTransform = transformation_evolution(end,:)-transformation_evolution(end-1,:)
+            diffTransform = transformation_evolution(end,:)-transformation_evolution(end-1,:);
             if (abs(diffTransform(1))<0.1 && ...
                     abs(diffTransform(2))<0.1 && ...
                     abs(diffTransform(3))<0.1 && ...
-                    abs(diffTransform(4))<0.001 && ...
-                    abs(diffTransform(5))<0.001 && ...
-                    abs(diffTransform(6))<0.001)
+                    abs(diffTransform(4))<0.1 && ...
+                    abs(diffTransform(5))<0.1 && ...
+                    abs(diffTransform(6))<0.1)
                break 
             end
         end
@@ -96,7 +97,7 @@ function [A_trans, transformation_evolution, size_subset] = minimization(A,covA,
 
         f = @(x)costFunction(x,param);
   
-        [transformation, dist] = fminunc(f,transformation,struct('Display', 'final', 'LargeScale','off','TolFun',1e-6,'TolX',1e-10));
+        [transformation, dist] = fminunc(f,transformation,struct('Display', 'off', 'LargeScale','off','TolFun',1e-6,'TolX',1e-10));
         eps = lastDist - dist;
         lastDist = dist;
         
@@ -114,9 +115,7 @@ function [A_trans, transformation_evolution, size_subset] = minimization(A,covA,
          plot(i,transformation(6)-groundTruthTransformation(6),'bo');
          hold off;
 
-        
-
-        [radtodeg(transformation(1:3)) transformation(4:6)]
+       
 
         
         transformation_evolution = [transformation_evolution; transformation];

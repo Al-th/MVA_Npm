@@ -32,10 +32,10 @@ clear poseA;
 clear poseB;
 
 %Subsample 
-A = A(1:5:end,:);
-covA = covA(1:5:end,:,:);
-B = B(1:5:end,:);
-covB = covB(1:5:end,:,:);
+A = A(1:10:end,:);
+covA = covA(1:10:end,:,:);
+B = B(1:10:end,:);
+covB = covB(1:10:end,:,:);
 
 
 
@@ -49,10 +49,11 @@ initTransform(1:3) = degtorad(initTransform(1:3))
 initTransform(1) = initTransform(1)+degtorad(5);
 initTransform(2) = initTransform(2)-degtorad(15);
 initTransform(3) = initTransform(3)-degtorad(10);
-initTransform(4) = initTransform(4);
-initTransform(5) = initTransform(5);
-initTransform(6) = initTransform(6);
+initTransform(4) = -initTransform(4)+20;
+initTransform(5) = initTransform(5)-10;
+initTransform(6) = initTransform(6)+15;
 
+initTransform
 
 
 

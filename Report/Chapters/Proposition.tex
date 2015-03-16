@@ -30,5 +30,50 @@ En effet, si l'on choisi $C_{i}^B = Id$ et $C_{i}^A = 0$, on se place par exempl
 &=& \underset{\mathbf{T}}{\text{arg min}} \sum_{i} \|d_{i}^{(\mathbf{T})}\|^2\\
 \end{eqnarray}
 
-Dans \cite{bib_gicp}, Segal et al. proposent une extension de l'ICP standard et du Point-to-plane ICP  dénommée Plane-to-plane 
+Dans \cite{bib_gicp}, Segal et al. proposent une extension de l'ICP standard et du Point-to-plane ICP  dénommée Plane-to-plane. Pour faire cette extension, il est posé comme hypothèse que les nuages de points sont localement plans. D'autre part, comme les scans ne sont pas pris du même point de vue, il est très fortement probable que les correspondances ne sont pas exactes. Cependant, des points proches seront tout de même situés sur le même plan. Pour modéliser ce phénomène, la matrice de covariance est construite pour avoir un très faible coefficient le long de la normale. Plus précisément, si la normale est colinéaire à $e1$, la matrice de covariance s'écrit sous la forme 
+
+\begin{equation}C_{plan} = \begin{pmatrix} 
+ \epsilon & 0 & 0 \\
+ 0 & 1 & 0 \\ 
+ 0 & 0 & 1 
+ \end{pmatrix}
+\end{equation}
+
+Afin de calculer ces matrices de covariances dans le cas de nuages de points réel, il y a donc une étape d'estimation des normales du nuage de point. Les auteurs indiquent utiliser une méthode d'estimation de normales par PCA sur les 20 plus proches voisins. En pratique, cela consiste à trouver dans le nuage de points les 20 plus proches voisins du point où l'on cherche à estimer la normale. Dans un second temps, on calcule la matrice de covariance $\hat{\Sigma}$ de l'ensemble de ces points. Enfin, on calcule la SVD de $\hat{\Sigma}$ : $\hat{\Sigma} = UDU^{T}$. La matrice $U$ contient les vecteurs propres de la matrice de covariance des points, et le vecteur qui correspond à la plus petite valeur propre est dans la direction de la normale. Ainsi, en remplaçant la matrice D par la matrice décrite plus haut on a (dans le cas ou la plus petite valeur propre correspond au premier vecteur propre) :
+
+\begin{equation}
+C_{i}^B = U_{i}^B.\begin{pmatrix} 
+ \epsilon & 0 & 0 \\
+ 0 & 1 & 0 \\ 
+ 0 & 0 & 1 
+ \end{pmatrix}.{U_{i}^{B}}^T
+\end{equation}
+
+On peut réaliser le même calcul pour $C_{i}^A$.
+
+L'intuition de l'influence de ces matrices de covariance est la suivante :\\
+
+\begin{itemize}
+\item{Dans le cas ou les normales sont colinéaires après transformation du second nuage de point, la somme des matrices de covariances $C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T}$ est une matrice qui reste anisotrope. La distance unitaire ${d_{i}^{\mathbf{T}}}^{T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})d_{i}^{\mathbf{T}}$ sera donc fortement impactée si les points sont éloignés dans la direction de la normale.  
+}
+
+\item{Dans le cas ou les normales ne sont pas colinéaires (par exemple dans le cas extrêmes ou elles sont orthogonales}, la somme des matrices de covariances va être de plus en plus isotrope. Ainsi la distance unitaire calculée ${d_{i}^{\mathbf{T}}}^{T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})d_{i}^{\mathbf{T}}$ aura moins d'influence dans le calcul de la fonction de coût.
+\end{itemize}
+
+L'image \ref{fig_cov} représente deux points pour lesquels les normales sont colinéaires, et deux points pour lesquelles les normales sont orthogonales, et l'influence que ces normales ont sur le calcul de la distance unitaire entre ces deux points.
+
+\begin{figure}[H]
+\centering
+\begin{tabular}{cc}
+\includegraphics[width = 0.5\textwidth]{Images/Proposition/covcol} &
+\includegraphics[width = 0.5\textwidth]{Images/Proposition/covorth}
+\end{tabular}
+\caption{Influence des matrices de covariance sur le calcul de distance}
+\label{fig_cov}
+\end{figure}
+
+
+
+
+
 

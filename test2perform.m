@@ -84,7 +84,7 @@ disp('SICP and GICP on Bunny done...');
 
 %%
 %Test on Hannover
-disp('Process on Hannover database : scan000 and scan005');
+disp('Process on Hannover database : scan000 and scan004');
 %Initialization : loading data and define intial transformation
 nbNeighbors = 20;
 %load data
@@ -99,6 +99,7 @@ gtTransform(5) = poseA(1,2)-poseB(1,2);
 gtTransform(6) = poseA(1,3)-poseB(1,3);
 clear poseA;
 clear poseB;
+
 initTransform = gtTransform;
 
 initTransform(1:3) = degtorad(initTransform(1:3))
@@ -106,8 +107,8 @@ initTransform(1) = initTransform(1)+degtorad(5);
 initTransform(2) = initTransform(2)-degtorad(15);
 initTransform(3) = initTransform(3)-degtorad(10);
 initTransform(4) = -initTransform(4)+20;
-initTransform(5) = initTransform(5)+50;
-initTransform(6) = initTransform(6)-30;
+initTransform(5) = initTransform(5)-10;
+initTransform(6) = initTransform(6)+15;
 
 initTransform
 
