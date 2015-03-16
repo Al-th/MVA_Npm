@@ -30,6 +30,19 @@ function [A_trans, transformation, transformation_evolution] = minimization(A,co
         if (abs(eps) < 5e-5)
             break
         end
+        
+        if i > 1
+            diffTransform = transformation_evolution(end,:)-transformation_evolution(end-1,:);
+            if (abs(diffTransform(1))<0.01 && ...
+                    abs(diffTransform(2))<0.01 && ...
+                    abs(diffTransform(3))<0.01 && ...
+                    abs(diffTransform(4))<0.01 && ...
+                    abs(diffTransform(5))<0.01 && ...
+                    abs(diffTransform(6))<0.01)
+               break 
+            end
+        end
+        
         A_trans = transformPointCloud(A,transformation);
         
         figure(1);
@@ -80,7 +93,7 @@ function [A_trans, transformation, transformation_evolution] = minimization(A,co
 
         f = @(x)costFunction(x,param);
   
-        [transformation, dist] = fminunc(f,transformation,struct('Display', 'off', 'LargeScale','off','TolFun',1e-6,'TolX',1e-10));
+        [transformation, dist] = fminunc(f,transformation,struct('Display', 'iter', 'LargeScale','off','TolFun',1e-6,'TolX',1e-10));
         eps = lastDist - dist;
         lastDist = dist;
         
@@ -93,7 +106,7 @@ function [A_trans, transformation, transformation_evolution] = minimization(A,co
         
         figure(3);
         hold on;
-        plot(i,transformation(4)-groundTruthTransformation(4),'ro');
+        plot(i,-transformation(4)-groundTruthTransformation(4),'ro');
         plot(i,transformation(5)-groundTruthTransformation(5),'go');
         plot(i,transformation(6)-groundTruthTransformation(6),'bo');
         hold off;
@@ -101,7 +114,7 @@ function [A_trans, transformation, transformation_evolution] = minimization(A,co
         radtodeg(transformation(1:3))
         transformation(4:6)
         
-        transformation_evolution = [transformation_evolution, transformation];
+        transformation_evolution = [transformation_evolution; transformation];
     end
     
 end

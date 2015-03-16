@@ -16,3 +16,5 @@ data/pose1/fullscan.asc
 *.synctex.gz
 *.toc
 *.pdf
+*.blg
+*.bbl
