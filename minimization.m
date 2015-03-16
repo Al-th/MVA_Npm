@@ -1,4 +1,4 @@
-function [A_trans, transformation, transformation_evolution] = minimization(A,covA,B,covB,groundTruthTransformation,initTransform,iterMax,dMax,useGenICP)
+function [A_trans, transformation_evolution] = minimization(A,covA,B,covB,groundTruthTransformation,initTransform,iterMax,dMax,useGenICP)
    
     transformation = initTransform;
     transformation_evolution = [transformation];
@@ -32,13 +32,13 @@ function [A_trans, transformation, transformation_evolution] = minimization(A,co
         end
         
         if i > 1
-            diffTransform = transformation_evolution(end,:)-transformation_evolution(end-1,:);
-            if (abs(diffTransform(1))<0.01 && ...
-                    abs(diffTransform(2))<0.01 && ...
-                    abs(diffTransform(3))<0.01 && ...
-                    abs(diffTransform(4))<0.01 && ...
-                    abs(diffTransform(5))<0.01 && ...
-                    abs(diffTransform(6))<0.01)
+            diffTransform = transformation_evolution(end,:)-transformation_evolution(end-1,:)
+            if (abs(diffTransform(1))<0.1 && ...
+                    abs(diffTransform(2))<0.1 && ...
+                    abs(diffTransform(3))<0.1 && ...
+                    abs(diffTransform(4))<0.1 && ...
+                    abs(diffTransform(5))<0.1 && ...
+                    abs(diffTransform(6))<0.1)
                break 
             end
         end
@@ -93,7 +93,7 @@ function [A_trans, transformation, transformation_evolution] = minimization(A,co
 
         f = @(x)costFunction(x,param);
   
-        [transformation, dist] = fminunc(f,transformation,struct('Display', 'iter', 'LargeScale','off','TolFun',1e-6,'TolX',1e-10));
+        [transformation, dist] = fminunc(f,transformation,struct('Display', 'final', 'LargeScale','off','TolFun',1e-6,'TolX',1e-10));
         eps = lastDist - dist;
         lastDist = dist;
         
@@ -111,8 +111,7 @@ function [A_trans, transformation, transformation_evolution] = minimization(A,co
         plot(i,transformation(6)-groundTruthTransformation(6),'bo');
         hold off;
         
-        radtodeg(transformation(1:3))
-        transformation(4:6)
+        [radtodeg(transformation(1:3)) transformation(4:6)]
         
         transformation_evolution = [transformation_evolution; transformation];
     end
