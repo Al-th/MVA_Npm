@@ -50,11 +50,11 @@ initTransform(1) = initTransform(1)+degtorad(5);
 initTransform(2) = initTransform(2)-degtorad(15);
 initTransform(3) = initTransform(3)-degtorad(10);
 initTransform(4) = -initTransform(4)+20;
-initTransform(5) = -initTransform(5)+50;
+initTransform(5) = initTransform(5)+50;
 initTransform(6) = initTransform(6)-30;
 
 
 
-[A_trans,transformation_evolution] = minimization(A,covA,B,covB,gtTransform,initTransform,20,500,true);
+[A_trans,transformation_evolution,size_subset] = minimization(A,covA,B,covB,gtTransform,initTransform,20,500,true);
 %A_trans = ICP_ClosedForm(A,B,initTransform,100,300);
 
