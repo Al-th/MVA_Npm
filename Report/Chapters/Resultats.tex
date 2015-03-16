@@ -6,7 +6,7 @@ Etant donné que GICP utilise l'information des surfaces de chacun des nuages de
 La transformation initiale $T_0$ est définie comme la transformation exacte $T^*$ auquel on ajoute une erreur entre $\pm1.5m$ et $\pm15^{\circ}$ selon tous les axes. Afin d'évaluer les performances, on mesure l'erreur de position moyenne $||B - \mathbf{T}(A)||_2$ (expliquer comme on gère lorsque les nuages ne sont pas échantillonnés pareil dans la prochaine partie (erreur plus élevée, NN plus compliqué). 
 \subsubsection{Etude de l'influence de $d_{max}$}
 %Explication de d_max
-La mise en correspondance des points des deux nuages est une étape cruciale de l'algorithme. La méthode la plus répandue consiste à apparier les points par recherche du plus proche voisin en ne gardant pour la suite uniquement 
+La mise en correspondance des points des deux nuages est une étape cruciale de l'algorithme ICP. La solution la plus répandue consiste à apparier les points par recherche du plus proche voisin. Cependant pour gérer les problèmes de nuage qui ne se recoupe pas complètement, on retire les points appariés dont la distance est supérieure à une certaine valeur $d_{max}$. En général, le choix de $d_{max}$ est un compromis entre la précision et la convergence de l'algorithme. Une valeur faible de $d_{max}$
 %Etude théorique : +dmax petit, +précis mais moins de chance de convergence et inversement
 %Présentation des résultats
 %Analyse des résultats
