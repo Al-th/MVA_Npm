@@ -43,5 +43,6 @@ Dans le cas de l'ICP Point-to-plane, on cherche à minimiser au sens de la méth
 E(R,t) = \sum_{i} \|(b_{i}-(R*a_{i} + t)).n_{i}\|^{2}
 \end{equation}	
 
-Dans cette énergie, $a_{i}$ et $b_{i}$ sont des triplets de coordonnées, $R$ est une matrice de rotation, t est un vecteur de translation, et $n_{i}$ est la normale associée au point $b_{i}$.
+Dans cette énergie, $a_{i}$ et $b_{i}$ sont des triplets de coordonnées, $R$ est une matrice de rotation, t est un vecteur de translation, et $n_{i}$ est la normale associée au point $b_{i}$.\\
 
+Si dans les deux algorithmes, la minimisation de l'énergie peut être coûteuse, des implémentations très efficaces ont été mises au point. Pour l'ICP, une résolution de la minimisation de l'énergie a permis de mettre en évidence une solution analytique. Pour la version Point-to-plane, la méthode des moindre carrés non linéaires peut être linéarisée (accélérant ainsi la minimisation de l'énergie) tout en gardant une bonne aproximation du résultat.
