@@ -1,6 +1,6 @@
 init;
 
-nbNeighbors = 15;
+nbNeighbors = 20;
 gtTransform = [-10,10,3,0.1,-0.05,0.03]
 %A is a bunny
 %B is the A bunny that was subject to a rotation and a translation
@@ -17,7 +17,7 @@ covB = covB(1:10:end,:,:);
 clc
 init;
 
-nbNeighbors = 20
+nbNeighbors = 20;
 [A,covA,poseA] = loadDBData('data/hannover1/scan000',nbNeighbors);
 [B,covB,poseB] = loadDBData('data/hannover1/scan004',nbNeighbors);
 
@@ -49,9 +49,9 @@ initTransform(1:3) = degtorad(initTransform(1:3))
 initTransform(1) = initTransform(1)+degtorad(5);
 initTransform(2) = initTransform(2)-degtorad(15);
 initTransform(3) = initTransform(3)-degtorad(10);
-initTransform(4) = -initTransform(4)+20;
-initTransform(5) = -initTransform(5)+50;
-initTransform(6) = initTransform(6)-30;
+initTransform(4) = initTransform(4);
+initTransform(5) = initTransform(5);
+initTransform(6) = initTransform(6);
 
 
 
