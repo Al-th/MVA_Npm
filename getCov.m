@@ -5,7 +5,7 @@ function covPointCloud = getCov(pointCloud,nbNeighbors)
     
     for i = 1:size(pointCloud,1)
         if(mod(i,1000)==0)
-           i 
+           i;
         end
         idxs = kdtree_k_nearest_neighbors(treeInitPointCloud,pointCloud(i,:),nbNeighbors);
     
