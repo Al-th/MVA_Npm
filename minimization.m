@@ -109,7 +109,7 @@ function [A_trans, transformation_evolution, size_subset] = minimization(A,covA,
          
          figure(3);
          hold on;
-         plot(i,transformation(4)-groundTruthTransformation(4),'ro');
+         plot(i,-transformation(4)-groundTruthTransformation(4),'ro');
          plot(i,transformation(5)-groundTruthTransformation(5),'go');
          plot(i,transformation(6)-groundTruthTransformation(6),'bo');
          hold off;

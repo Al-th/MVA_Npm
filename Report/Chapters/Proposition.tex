@@ -20,4 +20,15 @@ On souhaite minimiser la distance $d_{i}^{\mathbf{T}}$, ainsi on souhaite maximi
 &=& \underset{\mathbf{T}}{\text{arg min}} \sum_{i} d_{i}^{(\mathbf{T})^T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})^{-1}d_{i}^{(\mathbf{T})}
 \end{eqnarray}
 
-Le terme d'erreur unitaire $d_{i}^{(\mathbf{T})^T}(C_{i}^B+\mathbf{T}^{T}C_{i}^{A}\mathbf{T})^{-1}d_{i}^{(\mathbf{T})}$  est une distance probabiliste qui prends en compte la densité de probabilité des points dans l'espace $\mathbb{R}^{3})$. 
+Le terme d'erreur unitaire $d_{i}^{(\mathbf{T})^T}(C_{i}^B+\mathbf{T}^{T}C_{i}^{A}\mathbf{T})^{-1}d_{i}^{(\mathbf{T})}$  est une distance probabiliste qui prends en compte la densité de probabilité des points dans l'espace $\mathbb{R}^{3})$. Jusqu'à maintenant, les matrice de covariance $C_{i}^A$ et $C_{i}^B$ n'ont pas été définie. C'est le choix de ces matrices qui va déterminer dans quel cadre on souhaite résoundre la minimisation.\\
+
+En effet, si l'on choisi $C_{i}^B = Id$ et $C_{i}^A = 0$, on se place par exemple dans le cadre de l'ICP standard :
+
+\begin{eqnarray}
+\mathbf{T} &=& \underset{\mathbf{T}}{\text{arg min}} \sum_{i} d_{i}^{(\mathbf{T})^T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})^{-1}d_{i}^{(\mathbf{T})}\\
+&=& \underset{\mathbf{T}}{\text{arg min}} \sum_{i} d_{i}^{(\mathbf{T})^T}(Id)^{-1}d_{i}^{(\mathbf{T})}\\
+&=& \underset{\mathbf{T}}{\text{arg min}} \sum_{i} \|d_{i}^{(\mathbf{T})}\|^2\\
+\end{eqnarray}
+
+Dans \cite{bib_gicp}, Segal et al. proposent une extension de l'ICP standard et du Point-to-plane ICP  dénommée Plane-to-plane 
+

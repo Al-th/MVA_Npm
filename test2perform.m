@@ -89,7 +89,7 @@ disp('Process on Hannover database : scan000 and scan005');
 nbNeighbors = 20;
 %load data
 [A,covA,poseA] = loadDBData('data/hannover1/scan000',nbNeighbors);
-[B,covB,poseB] = loadDBData('data/hannover1/scan005',nbNeighbors);
+[B,covB,poseB] = loadDBData('data/hannover1/scan004',nbNeighbors);
 %define ground Truth transformation
 gtTransform(1) = poseA(2,1)-poseB(2,1);
 gtTransform(2) = poseA(2,2)-poseB(2,2);
@@ -101,10 +101,15 @@ clear poseA;
 clear poseB;
 initTransform = gtTransform;
 
-initTransform(1:3) = degtorad(initTransform(1:3));
+initTransform(1:3) = degtorad(initTransform(1:3))
+initTransform(1) = initTransform(1)+degtorad(5);
 initTransform(2) = initTransform(2)-degtorad(15);
+initTransform(3) = initTransform(3)-degtorad(10);
 initTransform(4) = -initTransform(4)+20;
-initTransform(6) = initTransform(6)+10;
+initTransform(5) = initTransform(5)+50;
+initTransform(6) = initTransform(6)-30;
+
+initTransform
 
 %Subsample 
 A = A(1:subsampling:end,:);
