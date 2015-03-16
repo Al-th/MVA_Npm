@@ -1,3 +1,23 @@
 \section{Proposition de l'article}
 
-L'article étudié (\cite{bib_gicp}) se propose de réunir les deux algorithmes précédents (ICP et Point-to-plane ICP) dans un cadre probabiliste commun. Ce cadre commun permet d'autre part de développer une nouvelle variante de l'algorithme dénommée "Plane-to-plane" ICP.
+L'article étudié se propose de réunir les deux algorithmes précédents (ICP et Point-to-plane ICP) dans un cadre probabiliste commun. Ce cadre commun permet d'autre part de développer une nouvelle variante de l'algorithme dénommée "Plane-to-plane" ICP.\\
+
+Le framework probabiliste décrit dans \cite{bib_gicp} ne concerne que l'énergie utilisée pour trouver la transformation optimale. En effet, l'étape de recherche de plus proche voisin n'a pas été modifiée afin de conserver la rapidité de recherche des plus proche voisins (En utilisant des kd-tree, la recherche se fait en complexité $\mathcal{O}(n\log{}n)$).\\
+
+La composante probabiliste de GICP est donc introduite dans l'étape de minimisation de l'énergie. Au lieu de considérer les nuages de points $A = \{a_{i}\}_{i=1..N}$ et $B = \{b_{i}\}_{i=1..N}$ comme étant des nuages de points déterministes, on considère $A$ et $B$ comme étant une réalisation d'un processus aléatoire généré à partir de  $\hat{A} = \{\hat{a}_{i}\}_{i=1..N}$ et $\hat{B} = \{\hat{b}_{i}\}_{i=1..N}$ pour lequel $a_{i} \sim \mathcal{N}(\hat{a_{i}}, C_{i}^A)$ et $b_{i} \sim \mathcal{N}(\hat{b_{i}}, C_{i}^B)$. Cela correspond à dire qu'il y a une forte probabilité pour que le point $a_{i}$ se trouve en $\hat{a}_i$, mais qu'il n'est pas impossible qu'il soit un peu déplacé dans le voisinage de $\hat{a_{i}}$.\\
+
+Dans ce cadre, si on connait la transformation optimale $\mathbf{T}^{*}$, on a $\hat{b_{i}} = \mathbf{T}^{*}\hat{a}_{i}$. On peut définir $d_{i}^{T} = b_{i} - \mathbf{T}a_{i}$ pour une transformation rigide $\mathbf{T}$. Comme $a_{i}$ et $b_{i}$ suivent des distributions gaussiennes indépendantes, on a :
+\begin{eqnarray}
+d_{i}^{(\mathbf{T}^{*})} &\sim& \mathcal{N}(\hat{b_{i}}-(\mathbf{T}^{*})a_{i},C_{i}^B + (\mathbf{T}^{*})C_{i}^{A}(\mathbf{T}^{*T}))\\
+&=& \mathcal{N}(0,C_{i}^B + (\mathbf{T}^{*})C_{i}^{A}(\mathbf{T}^{*})^{T})
+\end{eqnarray}
+
+On souhaite minimiser la distance $d_{i}^{\mathbf{T}}$, ainsi on souhaite maximiser la probabilité que $d_{i}^{\mathbf{T}}$ soit égal à 0. On utilise l'estimation du maximum de vraisemblance afin d'estimer les paramètres de la transformation $\mathbf{T}$.
+
+\begin{eqnarray}
+\mathbf{T} &=& \underset{\mathbf{T}}{\text{arg max}} \prod_{i} p(d_{i}^{(\mathbf{T})}) \\
+&=& \underset{\mathbf{T}}{\text{arg max}} \sum_{i} log(p(d_{i}^{(\mathbf{T})})) \\
+&=& \underset{\mathbf{T}}{\text{arg min}} \sum_{i} d_{i}^{(\mathbf{T})^T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})^{-1}d_{i}^{(\mathbf{T})}
+\end{eqnarray}
+
+Le terme d'erreur unitaire $d_{i}^{(\mathbf{T})^T}(C_{i}^B+\mathbf{T}^{T}C_{i}^{A}\mathbf{T})^{-1}d_{i}^{(\mathbf{T})}$  est une distance probabiliste qui prends en compte la densité de probabilité des points dans l'espace $\mathbb{R}^{3})$. 

@@ -55,6 +55,7 @@ initTransform(6) = initTransform(6);
 
 
 
-[A_trans,transformation_evolution] = minimization(A,covA,B,covB,gtTransform,initTransform,20,500,true);
+
+[A_trans,transformation_evolution,size_subset] = minimization(A,covA,B,covB,gtTransform,initTransform,20,500,true);
 %A_trans = ICP_ClosedForm(A,B,initTransform,100,300);
 
