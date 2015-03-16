@@ -7,3 +7,12 @@
 data/Bremen/*.*
 *.asv
 data/pose1/fullscan.asc
+
+##Ignore latex file
+*.aux
+*.dvi
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.pdf
