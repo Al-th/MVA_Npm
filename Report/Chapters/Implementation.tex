@@ -58,13 +58,24 @@ Enfin, en ce qui concerne les matrices de covariances $C_{i}^{A}$ et $C_{i}^{B}$
 Dans le cas de la variante \textit{Standard ICP}, les matrices de covariances sont les suivantes :
 
 \begin{eqnarray}
-C_{i}^A &=& 0\\
-C_{i}^B &=& 0
+C_{i}^A &=& 
+\begin{pmatrix}
+0 & 0 & 0\\
+0 & 0 & 0\\
+0 & 0 & 0
+\end{pmatrix}\\
+C_{i}^B &=& 
+\begin{pmatrix}
+1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
+\end{pmatrix}
 \end{eqnarray}
 
 \paragraph{Plane-to-plane ICP}
 
-Dans le cas de la variante \textit{Point-to-plane ICP}, nous avons utilisé l'astuce décrite dans \cite{bib_gicp} :
+Dans le cas de la variante \textit{Point-to-plane ICP}, nous avons utilisé l'astuce décrite dans \cite{bib_gicp} : \\
+
 
 \begin{algorithm}[H]
 \KwData{Nuage de point N, point $p$, Nombre de voisins n}
