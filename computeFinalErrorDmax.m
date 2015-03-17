@@ -44,22 +44,22 @@ time_sicp = [];
 time_gicp = [];
 dm = [];
 for i = 1:8
-    fileName = ['./Test/info_dmax_hannover_sicpclosedform' int2str(i) '.mat'];
+    fileName = ['./Test/info_dmax_hannover_gicp' int2str(i) '.mat'];
     tempInfo = load(fileName);
-    tempInfo = tempInfo.info_icpclosedform{end};
+    tempInfo = tempInfo.info_gicp{end};
     endTransformation = tempInfo.evolution_transformation(end,:);
     A_trans = transformPointCloud(A,endTransformation);
-    err = tempInfo.average_error %computeAverageErrorWithNN(B,A_trans)
+    err = computeAverageErrorWithNN(B,A_trans)
     n_gicp = [n_gicp err];
     nb_iter_gicp = [nb_iter_gicp size(tempInfo.size_subset,2)];
     subset_gicp = [subset_gicp tempInfo.size_subset(1)];
-    dm = [dm tempInfo.dMax];
+    dm = [dm tempInfo.dMax]
     time_gicp = [time_gicp tempInfo.time];
     
-%     figure(2);
-%     hold on;
-%     plot(tempInfo.size_subset,'b'); 
-%     hold off;
+    figure(2);
+    hold on;
+    plot(tempInfo.size_subset,'b'); 
+    hold off;
     
     fileName = ['./Test/info_dmax_hannover_sicp' int2str(i) '.mat'];
     tempInfo = load(fileName);
@@ -72,12 +72,12 @@ for i = 1:8
     subset_sicp = [subset_sicp tempInfo.size_subset(1)];
     time_sicp = [time_sicp tempInfo.time];
     
-%     figure(2);
-%     hold on;
-%     plot(tempInfo.size_subset,'r');
-%     hold off;  
+    figure(2);
+    hold on;
+    plot(tempInfo.size_subset,'r');
+    hold off;  
     
-%    pause();
+   pause();
 end
 %%
 figure(1);

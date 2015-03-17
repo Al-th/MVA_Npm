@@ -68,5 +68,9 @@ plot(nGicp,'b');
 hold on
 plot(nSicp,'r');
 hold off;
+legend('Generalized ICP','Standard ICP');
+xlabel('Iteration');
+ylabel('Average Error (cm)');
+title(sprintf('Hannover scans (1373 points), dmax : %d',tempInfoGicp.dMax));
 pause()
 end
