@@ -54,10 +54,10 @@ On peut réaliser le même calcul pour $C_{i}^A$.
 L'intuition de l'influence de ces matrices de covariance est la suivante :\\
 
 \begin{itemize}
-\item{Dans le cas ou les normales sont colinéaires après transformation du second nuage de point, la somme des matrices de covariances $C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T}$ est une matrice qui reste anisotrope. La distance unitaire ${d_{i}^{\mathbf{T}}}^{T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})d_{i}^{\mathbf{T}}$ sera donc fortement impactée si les points sont éloignés dans la direction de la normale.  
+\item{Dans le cas ou les normales sont colinéaires après transformation du second nuage de point, la somme des matrices de covariances $C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T}$ est une matrice qui reste anisotrope. La distance unitaire ${d_{i}^{(\mathbf{T})}}^{T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})d_{i}^{(\mathbf{T})}$ sera donc fortement impactée si les points sont éloignés dans la direction de la normale.  
 }
 
-\item{Dans le cas ou les normales ne sont pas colinéaires (par exemple dans le cas extrêmes ou elles sont orthogonales}, la somme des matrices de covariances va être de plus en plus isotrope. Ainsi la distance unitaire calculée ${d_{i}^{\mathbf{T}}}^{T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})d_{i}^{\mathbf{T}}$ aura moins d'influence dans le calcul de la fonction de coût.
+\item{Dans le cas ou les normales ne sont pas colinéaires (par exemple dans le cas extrêmes ou elles sont orthogonales}, la somme des matrices de covariances va être de plus en plus isotrope. Ainsi la distance unitaire calculée ${d_{i}^{(\mathbf{T})}}^{T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})d_{i}^{(\mathbf{T})}$ aura moins d'influence dans le calcul de la fonction de coût.
 \end{itemize}
 
 L'image \ref{fig_cov} représente deux points pour lesquels les normales sont colinéaires, et deux points pour lesquelles les normales sont orthogonales, et l'influence que ces normales ont sur le calcul de la distance unitaire entre ces deux points.

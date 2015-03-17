@@ -5,13 +5,15 @@ tree = kdtree_build(B);
 current = A;    
 size_subset = [];
 evol_transform = [];
+totalTransform = eye(4,4);
+
 
 lastError = 10000;
 for i = 1:iterMax
     error = computeAverageErrorWithNN(current,B);
     diffError = lastError - error
     lastError = error;
-    if(diffError < 1e-5)
+    if(abs(diffError) < 1e-5)
         break;
     end
     
@@ -47,6 +49,7 @@ for i = 1:iterMax
             param{2}.point(nbSubset,:) = B(closestPointIndexInB(j),:);
         end
     end
+    nbSubset
     size_subset = [size_subset nbSubset];
     % Reduce param to subset only
     param{1}.point = param{1}.point(1:nbSubset,:);
@@ -73,9 +76,14 @@ for i = 1:iterMax
     t_est = b' - R_est*bp';
     
     current = (R_est'*current')' - repmat(t_est',size(current,1),1);
+        
     
-    [alpha beta gamma] = computeAnglesFromRotationMatrix(R_est);
-    evol_transform = [evol_transform; [alpha beta gamma t_est(1) t_est(2) t_est(3)]];
+    estimatedTransform = [R_est, t_est; 0 0 0 1];
+    totalTransform = estimatedTransform*totalTransform;
     
+    [alpha beta gamma] = computeAnglesFromRotationMatrix(totalTransform(1:3,1:3));
+    evol_transform = [evol_transform; [alpha beta gamma totalTransform(1,4) totalTransform(2,4) totalTransform(3,4)]];
+       
 end
+
 end

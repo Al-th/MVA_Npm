@@ -1,6 +1,80 @@
 \section{Implémentation}
+Afin d'évaluer le framework proposé par \cite{bib_gicp}, nous avons décidé de réaliser une série d'expériences qui seront décrites dans le chapitre \ref{chap_results}. Pour réaliser ces expériences, nous avons du implémenter plusieurs algorithmes. Tout d'abord, nous avons ré-implémenté l'algorithme de référence \textbf{Iterative Closest Point} dans son cadre de résolution habituel.  Dans un second temps, nous avons implémenté le framework décrit dans \cite{bib_gicp}, et avons implémenté la variante \textbf{Standard ICP} et la variante \textbf{Plane-to-plane ICP}. Ce chapitre a pour but de décrire comment nous avons procédé pour l'implémentation de ces différents algorithmes.
 
-%TODO : Implémentation de Generalized-ICP
-%TODO : Implémentation de Generalized-ICP sICP
-%TODO : Implémentation de Generalized-ICP point-to-plane
-%TODO : Implémentation de ICP closed form
+\subsection{ICP : Solution analytique}
+
+L'algorithme général de l'ICP est le suivant :\\
+
+\begin{algorithm}[H]
+\KwData{Nuage de points : A,B}
+\KwResult{Transformation : T}
+erreur = $\infty$\;
+\While{erreur > seuil }{
+$\{a_{i},b_{i}\}$ = trouverCorrespondances(A,B,distanceMaximum)\;
+$T = \underset{T}{arg min} \sum_{i}{\|T.b_{i}-a_{i}\|}$\;
+}
+\caption{Algorithme ICP}
+\label{algo_icp}
+\end{algorithm}
+
+Tout d'abord, pour l'étape de recherche des correspondances entre les nuages de points $\mathbf{A}$ et $\mathbf{B}$, nous avons utilisé une structure de kd-tree (librairie matlab \textit{kdtree1.2} de \textit{Andrea Tagliasacchi}).
+
+Pour l'étape de minimisation de l'énergie, nous avons utilisé la méthode analytique décrite dans le cours du MVA (Voir algorithme \ref{algo_icpClosedForm}) :\\
+
+\begin{algorithm}[H]
+\KwData{Nuage de points correspondants : $A = \{a_{i}\}$, $B = \{b_{i}\}$}
+\KwResult{Rotation R, Translation t}
+$b^{A}$ = barycentre(A)\;
+$b^{B}$ = barycentre(B)\;
+$H = \sum_{i}q_{i}^{B}{q_{i}^{A}}^T$ avec $q_{i}^{N} = n_{i}-b^{N}$\;
+$[U,\Sigma,V^{T}] = svd(H)$\;
+$R = VU^{T}$\;
+$t = b^{A}-Rb^{B}$\;
+\caption{Solution analytique de la minimisation de $T = arg min \sum_{i}{\|T.b_{i}-a_{i}\|}$}
+\label{algo_icpClosedForm}
+\end{algorithm}
+
+
+\subsection{Generalized ICP}
+De la même manière, nous avons implémenté Generalized ICP de la manière décrite dans \cite{bib_gicp}. L'algorithme est très similaire à l'algorithme de l'ICP. En effet seule l'énergie à minimiser est modifiée.\\
+
+\begin{algorithm}[H]
+\KwData{Nuage de points : A,B}
+\KwResult{Transformation : T}
+erreur = $\infty$\;
+\While{erreur > seuil }{
+$\{a_{i},b_{i}\}$ = trouverCorrespondances(A,B,distanceMaximum)\;
+$T = \underset{T}{arg min} \sum_{i}{{d_{i}^{(\mathbf{T})}}^{T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})d_{i}^{(\mathbf{T})}}$, avec $d_{i}^{(\mathbf{T})} = b_{i} - T.a_{i}$\;
+}
+\caption{framework GeneralizedICP}
+\label{algo_gicp}
+\end{algorithm}
+
+Pour l'étape de recherche de correspondances entre les deux nuages de points, nous avons conservé l'utilisation du kd-tree. 
+En ce qui concerne la minimisation de l'énergie, nous avons utilisé la fonction matlab \textit{fminunc}, fonction de minimisation d'une fonction à plusieurs variables utilisant la méthode de Quasi-newton.
+Enfin, en ce qui concerne les matrices de covariances $C_{i}^{A}$ et $C_{i}^{B}$, elles dépendent des variante que l'on souhaite mettre en œuvre et sont décrites ci-dessous.
+
+\paragraph{Standard ICP}
+Dans le cas de la variante \textit{Standard ICP}, les matrices de covariances sont les suivantes :
+
+\begin{eqnarray}
+C_{i}^A &=& 0\\
+C_{i}^B &=& 0
+\end{eqnarray}
+
+\paragraph{Plane-to-plane ICP}
+
+Dans le cas de la variante \textit{Point-to-plane ICP}, nous avons utilisé l'astuce décrite dans \cite{bib_gicp} :
+
+\begin{algorithm}[H]
+\KwData{Nuage de point N, point $p$, Nombre de voisins n}
+\KwResult{Matrice de covariance $C_{i}^{N}$}
+$\{p_{k}\}$ = plusProcheVoisins(N,$p$,n)\;
+$C = \frac{1}{n}\sum_{k}{(p_{k}-\mu)(p_{k}-\mu)^{T}}$\;
+$[U,\Sigma,U^{T}] = svd(C)$\;
+$C_{i}^{N} = U\begin{pmatrix}
+\epsilon & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
+\end{pmatrix}U^{T}$
+\end{algorithm}

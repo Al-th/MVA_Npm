@@ -1,4 +1,6 @@
 \section{Résultats}
+\label{chap_results}
+
 Afin d'analyser les performances de la méthode proposée par \cite{bib_gicp}, nous avons tout d'abord chercher à étudier l'influence du critère $d_{max}$ appliquer lors de l'appariement des points, la robustesse de l'algorithme face à des changement de poses différents et la différence de résultats entre le Standard ICP obtenu avec la formule analytique et le Standard ICP obtenu avec le modèle probabilistique présenté dans l'article. (en posant $C_{i}^B=Id$ et $C_{i}^A=0$).\\
 
 Etant donné que GICP utilise l'information des surfaces de chacun des nuages de points, l'algorithme présente donc théoriquement une meilleure robustesse à la différence d'échantillonnage entre les deux nuages de points. Ainsi, l'ensemble des tests seront réalisés à la fois sur une paire de scans synthétiques présentée figure \ref{fig_nuage_bunny} et une paire de scans réelles acquise par l'université de Hannovre présentée \ref{fig_nuage_recalage} . On dispose pour les scans réels de l'estimation de leur poses, i.e une matrice de transformation $T^*$, afin de s'en servir de vérité terrain. Enfin, pour générer la paire de scans synthétiques, une transformation connue $T^{*}$ est appliquée sur le nuage de points synthétiques puis la position des points du nuage transformé est modifié par un bruit gaussien.\\

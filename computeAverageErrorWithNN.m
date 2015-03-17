@@ -1,5 +1,4 @@
 function average_error = computeAverageErrorWithNN(pc1, pc2)
-disp('computeAverageError');
 if( size(pc1,1) < size(pc2,1) )
     A = pc1;
     B = pc2;

@@ -31,6 +31,11 @@ for i = 1:8
     plot(evol(:,5)-gt(5),'r');
     plot(evol(:,6)-gt(6),'r');
     hold off;
+    
+    
+    figure(3);
+    plot(info_sicp{i}.size_subset,'r');
+
 
 
     evol = info_gicp{i}.evolution_transformation;
@@ -44,6 +49,7 @@ for i = 1:8
     plot(evol(:,3)-gt(3),'b-');
     hold off;
     
+    
     figure(2);
     hold on;
     plot(-evol(:,4)-gt(4),'b-');
@@ -51,6 +57,11 @@ for i = 1:8
     plot(evol(:,6)-gt(6),'b-');
     hold off;
     
+    figure(3);
+    hold on;
+    plot(info_gicp{i}.size_subset,'b');
+    axis([0 max(size(info_gicp{i}.evolution_transformation,1),size(info_sicp{i}.evolution_transformation,1)) 0 100+max(max(info_sicp{i}.size_subset),max(info_gicp{i}.size_subset))])
+    hold off;
     pause()
     
     sicp_err = [sicp_err info_sicp{i}.average_error];
