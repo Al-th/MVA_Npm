@@ -7,10 +7,27 @@ La transformation initiale $T_0$ est définie comme la transformation exacte $T^
 \subsubsection{Etude de l'influence de $d_{max}$}
 %Explication de d_max
 La mise en correspondance des points des deux nuages est une étape cruciale de l'algorithme ICP. La solution la plus répandue consiste à apparier les points par recherche du plus proche voisin. Cependant les nuages ne se recoupent pas complètement ainsi certains points d'un nuage ne corresponde à aucun point de l'autre nuage (occlusion, recouvrement partiel). Pour prendre cela en compte, une solution est de retirer les points appariés dont la distance est supérieure à un seuil $d_{max}$.\\
-
-En général, le choix de $d_{max}$ est un compromis entre la précision de l'algorithme et sa portée de convergence. En effet, une valeur faible de $d_{max}$ entraîne un faîble nombre de points appariés rendant la convergence de l'algorithme plus difficile. Au contraîre, une valeur plus élevée
 %Etude théorique : +dmax petit, +précis mais moins de chance de convergence et inversement
+En général, le choix de $d_{max}$ est un compromis entre la précision de l'algorithme et sa portée de convergence. En effet, une valeur faible de $d_{max}$ entraîne un faible nombre de points appariés rendant la convergence de l'algorithme plus difficile. Au contraire, une valeur plus élevée de $d_{max}$ peut causer des appariements inexactes et ainsi éloigner l'estimation de la transformation de sa valeur exacte. 
 %Présentation des résultats
+\begin{figure}[!h]
+   \centering
+   \begin{subfigure}[t]{.5\linewidth}
+     \centering
+     \includegraphics[scale=0.4]{Images/bunny_evol_error_dmax.jpg}
+     \caption{Données synthétiques}
+   \end{subfigure}%
+   ~
+   \begin{subfigure}[t]{.5\linewidth}
+     \centering
+     \includegraphics[scale=0.4]{Images/hannover_evol_error_dmax.jpg}
+     \caption{Données réelles}
+   \end{subfigure}
+   
+   \caption{Evolution de l'erreur moyenne de position en fonction de la valeur du seuil $d_{max}$ pour GICP et Standard ICP.}
+   \label{fig:choix}
+\end{figure}
+
 %Analyse des résultats
 \subsubsection{Etude de l'influence de l'offset}
 \subsubsection{Standard ICP par solution analytique}

@@ -34,10 +34,12 @@ initTransform(5) = initTransform(5)-10;
 initTransform(6) = initTransform(6)+15;
 
 %%
-figure(2);
-
 n_gicp = [];
 n_sicp = [];
+subset_sicp = [];
+subset_gicp = [];
+nb_iter_sicp = [];
+nb_iter_gicp = [];
 dm = [];
 for i = 1:8
     fileName = ['./Test/info_dmax_hannover_gicp' int2str(i) '.mat'];
@@ -47,12 +49,14 @@ for i = 1:8
     A_trans = transformPointCloud(A,endTransformation);
     err = computeAverageErrorWithNN(B,A_trans)
     n_gicp = [n_gicp err];
+    nb_iter_gicp = [nb_iter_gicp size(tempInfo.size_subset,2)];
+    subset_gicp = [subset_gicp tempInfo.size_subset(1)]
     dm = [dm tempInfo.dMax]
     
-    figure(2);
-    hold on;
-    plot(tempInfo.size_subset,'b');
-    hold off;
+%     figure(2);
+%     hold on;
+%     plot(tempInfo.size_subset,'b'); 
+%     hold off;
     
     fileName = ['./Test/info_dmax_hannover_sicp' int2str(i) '.mat'];
     tempInfo = load(fileName);
@@ -61,22 +65,47 @@ for i = 1:8
     A_trans = transformPointCloud(A,endTransformation);
     err = computeAverageErrorWithNN(B,A_trans)
     n_sicp = [n_sicp err];
+    nb_iter_sicp = [nb_iter_sicp size(tempInfo.size_subset,2)];
+    subset_sicp = [subset_sicp tempInfo.size_subset(1)]
     
-    figure(2);
-    hold on;
-    plot(tempInfo.size_subset,'r');
-    hold off;
+%     figure(2);
+%     hold on;
+%     plot(tempInfo.size_subset,'r');
+%     hold off;  
     
-    pause();
+%    pause();
 end
-
+%%
 figure(1);
 hold on;
 plot(dm,n_gicp,'r','LineWidth',2);
 plot(dm,n_sicp,'b','LineWidth',2);
 hold off;
-axis([0 2000 40 70]);
+%axis([0 2000 40 70]);
 xlabel('dmax (cm)');
 ylabel('Average error (cm)');
-title('Hannover scans (1500 points)');
+title('Hannover scans (1373 points)');
+legend('Generalized ICP','Standard ICP');
+
+%%
+figure(2);
+clf;
+hold on;
+plot(dm,subset_sicp,'b','LineWidth',2);
+hold off;
+%axis([0 2000 40 70]);
+xlabel('dmax (cm)');
+ylabel('Number of corresponding points');
+title('Hannover scans (1373 points)');
+
+%%
+figure(6);
+hold on;
+plot(dm,nb_iter_gicp,'r','LineWidth',2);
+plot(dm,nb_iter_sicp,'b','LineWidth',2);
+legend('Generalized ICP','Standard ICP');
+hold off;
+xlabel('dmax (cm)');
+ylabel('Number of iteration');
+title('Hannover scans (1373 points)');
 legend('Generalized ICP','Standard ICP');
