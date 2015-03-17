@@ -1,4 +1,4 @@
-function [current evol_transform] = ICP_closedForm(A,B,initTransform,iterMax,dMax)
+function [current evol_transform, size_subset] = ICP_closedForm(A,B,initTransform,iterMax,dMax)
 
 A = transformPointCloud(A,initTransform);
 tree = kdtree_build(B);

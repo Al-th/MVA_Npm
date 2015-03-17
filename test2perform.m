@@ -182,3 +182,28 @@ disp('Test influence terminated...');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Comparer ICP Closedform et ICP avec generalized framework (sur Bremen ?)
+
+info_icpclosedform = {};
+
+for i = 1:size(dMax_hannover,2)
+    fprintf('### d_max : %d, number %d/%d###\n',dMax_hannover(i),i,size(dMax_hannover,2));
+    disp('Compute transformation by StandardICP : Closed form');
+    close all;
+    tic;
+    
+    [A_trans,evol_T,size_subset] = ICP_ClosedForm(A,B,initTransform,100,300);
+    
+    
+    elapsed_time = toc;
+    info_icpclosedform{i}.dMax = dMax_hannover(i);
+    info_icpclosedform{i}.time = elapsed_time;
+    info_icpclosedform{i}.average_error = computeAverageErrorWithNN(B,A_trans);
+    info_icpclosedform{i}.evolution_transformation = evol_T;
+    info_icpclosedform{i}.size_subset = size_subset;
+    disp('toto');
+    info_icpclosedform{i}.estimate_transformation = evol_T(end,:);
+    fprintf('time : %.2f, err : %.2d ,converge in %.0f iterations.\n',...
+            elapsed_time,info_sicp{i}.average_error,size(size_subset,2));
+    save(['./Test/info_dmax_hannover_sicpclosedform' int2str(i) '.mat'],'info_icpclosedform');
+
+end
