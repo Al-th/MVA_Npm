@@ -1,11 +1,11 @@
 
-function [A_trans, transformation_evolution, size_subset] = minimization(A,covA,B,covB,groundTruthTransformation,initTransform,iterMax,dMax,useGenICP)
+function [A_trans, transformation_evolution, size_subset, error_pos] = minimization(A,covA,B,covB,groundTruthTransformation,initTransform,iterMax,dMax,useGenICP)
 
-    figure(1);clf;figure(2);clf;figure(3);clf;
+    %figure(1);clf;figure(2);clf;figure(3);clf;
     transformation = initTransform;
     transformation_evolution = [transformation];
     size_subset = [];
-        
+    error_pos = [];
     tree = kdtree_build(B);
 
     %Precompute covariance matrices for each point in the point clouds
@@ -51,7 +51,7 @@ function [A_trans, transformation_evolution, size_subset] = minimization(A,covA,
         end
         
         A_trans = transformPointCloud(A,transformation);
-        
+        error_pos = [error_pos computeAverageErrorWithNN(B,A_trans)]
         figure(1);
         step = 1;
         ind = [1:step:size(B,1)];
@@ -91,7 +91,7 @@ function [A_trans, transformation_evolution, size_subset] = minimization(A,covA,
                param{2}.cov(nbSubset,:,:) = covB(closestPointIndexInB(j),:,:);
             end
         end
-        size_subset = [size_subset nbSubset];
+        size_subset = [size_subset nbSubset]
         % Reduce param to subset only
         param{1}.point = param{1}.point(1:nbSubset,:);
         param{2}.point = param{2}.point(1:nbSubset,:);

@@ -6,7 +6,8 @@ gtTransform = [-10,10,3,0.1,-0.05,0.03]
 %B is the A bunny that was subject to a rotation and a translation
 [A,covA,B,covB] = setupData(gtTransform(1),gtTransform(2),gtTransform(3),...
                             gtTransform(4),gtTransform(5),gtTransform(6),...
-                            nbNeighbors);                       
+                            nbNeighbors);  
+%%
 %Subsample 
 A = A(1:subSampleStep:end,:);
 covA = covA(1:subSampleStep:end,:,:);
@@ -59,4 +60,3 @@ clf;
 [A_trans,transformation_evolution,size_subset] = minimization(A,covA,B,covB,gtTransform,initTransform,20,0.1,true);
 %[A_trans evol_transform,size_subset]= ICP_ClosedForm(A,B,initTransform,150,0.1);
 computeAverageErrorWithNN(A_trans,B)
-%%
