@@ -1,10 +1,19 @@
-function current = ICP_closedForm(A,B,initTransform,iterMax,dMax)
+function [current evol_transform] = ICP_closedForm(A,B,initTransform,iterMax,dMax)
 
 A = transformPointCloud(A,initTransform);
 tree = kdtree_build(B);
-current = A;
+current = A;    
+size_subset = [];
+evol_transform = [];
 
+lastError = 10000;
 for i = 1:iterMax
+    error = computeAverageErrorWithNN(current,B);
+    diffError = lastError - error
+    lastError = error;
+    if(diffError < 1e-5)
+        break;
+    end
     
     step = 1;
     ind = [1:step:size(B,1)];
@@ -38,7 +47,7 @@ for i = 1:iterMax
             param{2}.point(nbSubset,:) = B(closestPointIndexInB(j),:);
         end
     end
-    nbSubset
+    size_subset = [size_subset nbSubset];
     % Reduce param to subset only
     param{1}.point = param{1}.point(1:nbSubset,:);
     param{2}.point = param{2}.point(1:nbSubset,:);
@@ -64,6 +73,9 @@ for i = 1:iterMax
     t_est = b' - R_est*bp';
     
     current = (R_est'*current')' - repmat(t_est',size(current,1),1);
+    
+    [alpha beta gamma] = computeAnglesFromRotationMatrix(R_est);
+    evol_transform = [evol_transform; [alpha beta gamma t_est(1) t_est(2) t_est(3)]];
     
 end
 end
