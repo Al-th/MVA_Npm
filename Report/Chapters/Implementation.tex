@@ -1,5 +1,5 @@
 \section{Implémentation}
-Afin d'évaluer le framework proposé par \cite{bib_gicp}, nous avons décidé de réaliser une série d'expériences qui seront décrites dans le chapitre \ref{chap_results}. Pour réaliser ces expériences, nous avons du implémenter plusieurs algorithmes. Tout d'abord, nous avons ré-implémenté l'algorithme de référence \textbf{Iterative Closest Point} dans son cadre de résolution habituel.  Dans un second temps, nous avons implémenté le framework décrit dans \cite{bib_gicp}, et avons implémenté la variante \textbf{Standard ICP} et la variante \textbf{Plane-to-plane ICP}. Ce chapitre a pour but de décrire comment nous avons procédé pour l'implémentation de ces différents algorithmes.
+Afin d'évaluer le framework proposé par \cite{bib_gicp}, nous avons décidé de réaliser une série d'expériences qui seront décrites dans le chapitre \ref{chap_results}. Pour réaliser ces expériences, nous avons du implémenter plusieurs algorithmes. Tout d'abord, nous avons ré-implémenté l'algorithme de référence \textbf{Iterative Closest Point} dans son cadre d'utilisation habituel (c'est à dire en utilisant la solution analytique pour l'étape de minimisation de l'énergie).  Dans un second temps, nous avons implémenté le framework Generalized-ICP décrit dans \cite{bib_gicp}, et avons implémenté la variante \textbf{Standard ICP} et la variante \textbf{Plane-to-plane ICP}. Ce chapitre a pour but de décrire comment nous avons procédé pour l'implémentation de ces différents algorithmes.
 
 \subsection{ICP : Solution analytique}
 
@@ -12,6 +12,7 @@ erreur = $\infty$\;
 \While{erreur > seuil }{
 $\{a_{i},b_{i}\}$ = trouverCorrespondances(A,B,distanceMaximum)\;
 $T = \underset{T}{arg min} \sum_{i}{\|T.b_{i}-a_{i}\|}$\;
+erreur = calculErreur(A,T.B)\;
 }
 \caption{Algorithme ICP}
 \label{algo_icp}
@@ -19,7 +20,7 @@ $T = \underset{T}{arg min} \sum_{i}{\|T.b_{i}-a_{i}\|}$\;
 
 Tout d'abord, pour l'étape de recherche des correspondances entre les nuages de points $\mathbf{A}$ et $\mathbf{B}$, nous avons utilisé une structure de kd-tree (librairie matlab \textit{kdtree1.2} de \textit{Andrea Tagliasacchi}).
 
-Pour l'étape de minimisation de l'énergie, nous avons utilisé la méthode analytique décrite dans le cours du MVA (Voir algorithme \ref{algo_icpClosedForm}) :\\
+Pour l'étape de minimisation de l'énergie, nous avons utilisé la méthode analytique prouvée dans le cours du MVA (algorithme \ref{algo_icpClosedForm}).\\
 
 \begin{algorithm}[H]
 \KwData{Nuage de points correspondants : $A = \{a_{i}\}$, $B = \{b_{i}\}$}
@@ -36,7 +37,7 @@ $t = b^{A}-Rb^{B}$\;
 
 
 \subsection{Generalized ICP}
-De la même manière, nous avons implémenté Generalized ICP de la manière décrite dans \cite{bib_gicp}. L'algorithme est très similaire à l'algorithme de l'ICP. En effet seule l'énergie à minimiser est modifiée.\\
+Nous avons d'autre part implémenté Generalized ICP comme proposé dans l'article de Segal et al. (\cite{bib_gicp}). L'algorithme est très similaire à l'algorithme de l'ICP. En effet seule l'énergie à minimiser est modifiée.\\
 
 \begin{algorithm}[H]
 \KwData{Nuage de points : A,B}
@@ -50,8 +51,8 @@ $T = \underset{T}{arg min} \sum_{i}{{d_{i}^{(\mathbf{T})}}^{T}(C_{i}^B + \mathbf
 \label{algo_gicp}
 \end{algorithm}
 
-Pour l'étape de recherche de correspondances entre les deux nuages de points, nous avons conservé l'utilisation du kd-tree. 
-En ce qui concerne la minimisation de l'énergie, nous avons utilisé la fonction matlab \textit{fminunc}, fonction de minimisation d'une fonction à plusieurs variables utilisant la méthode de Quasi-newton.
+Pour l'étape de recherche de correspondances entre les deux nuages de points, nous utilisons encore une structure de kd-tree. 
+En ce qui concerne la minimisation de l'énergie, nous avons utilisé la fonction matlab \textit{fminunc} de matlab (fonction de minimisation d'une fonction à plusieurs variables utilisant la méthode de Quasi-newton.)
 Enfin, en ce qui concerne les matrices de covariances $C_{i}^{A}$ et $C_{i}^{B}$, elles dépendent des variante que l'on souhaite mettre en œuvre et sont décrites ci-dessous.
 
 \paragraph{Standard ICP}
@@ -89,3 +90,5 @@ $C_{i}^{N} = U\begin{pmatrix}
 0 & 0 & 1
 \end{pmatrix}U^{T}$
 \end{algorithm}
+
+Ces matrices de covariances correspondent à l'hypothèse de surface localement plane, et pour lesquelles la valeur propre associée au vecteur colinéaire à la normale au plan est mise à une valeur très faible $\epsilon$.
