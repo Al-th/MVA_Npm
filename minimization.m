@@ -1,7 +1,7 @@
 
 function [A_trans, transformation_evolution, size_subset] = minimization(A,covA,B,covB,groundTruthTransformation,initTransform,iterMax,dMax,useGenICP)
 
-   
+    figure(1);clf;figure(2);clf;figure(3);clf;
     transformation = initTransform;
     transformation_evolution = [transformation];
     size_subset = [];
@@ -32,17 +32,20 @@ function [A_trans, transformation_evolution, size_subset] = minimization(A,covA,
          
         
         if (abs(eps) < 5e-5)
+                fprintf('Iteration %d : Stopping by diff of cost function (eps)\n',i);
             break
         end
         
         if i > 1
             diffTransform = transformation_evolution(end,:)-transformation_evolution(end-1,:);
-            if (abs(diffTransform(1))<0.1 && ...
-                    abs(diffTransform(2))<0.1 && ...
-                    abs(diffTransform(3))<0.1 && ...
-                    abs(diffTransform(4))<0.1 && ...
-                    abs(diffTransform(5))<0.1 && ...
-                    abs(diffTransform(6))<0.1)
+            if (abs(diffTransform(1))<0.001 && ...
+                    abs(diffTransform(2))<0.001 && ...
+                    abs(diffTransform(3))<0.001 && ...
+                    abs(diffTransform(4))<0.0001 && ...
+                    abs(diffTransform(5))<0.0001 && ...
+                    abs(diffTransform(6))<0.0001)
+                
+                fprintf('Iteration %d : Stopping by diffTransform criterion\n',i);
                break 
             end
         end
@@ -110,7 +113,7 @@ function [A_trans, transformation_evolution, size_subset] = minimization(A,covA,
          
          figure(3);
          hold on;
-         plot(i,-transformation(4)-groundTruthTransformation(4),'ro');
+         plot(i,transformation(4)-groundTruthTransformation(4),'ro');
          plot(i,transformation(5)-groundTruthTransformation(5),'go');
          plot(i,transformation(6)-groundTruthTransformation(6),'bo');
          hold off;
@@ -120,6 +123,4 @@ function [A_trans, transformation_evolution, size_subset] = minimization(A,covA,
         
         transformation_evolution = [transformation_evolution; transformation];
     end
-    fprintf('\n');
-    
 end
