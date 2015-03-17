@@ -34,8 +34,10 @@ initTransform(5) = initTransform(5)-10;
 initTransform(6) = initTransform(6)+15;
 
 %%
+figure(2);
 
-n = [];
+n_gicp = [];
+n_sicp = [];
 dm = [];
 for i = 1:8
     fileName = ['./Test/info_dmax_hannover_gicp' int2str(i) '.mat'];
@@ -44,9 +46,37 @@ for i = 1:8
     endTransformation = tempInfo.evolution_transformation(end,:)
     A_trans = transformPointCloud(A,endTransformation);
     err = computeAverageErrorWithNN(B,A_trans)
-    n = [n err]
+    n_gicp = [n_gicp err];
     dm = [dm tempInfo.dMax]
+    
+    figure(2);
+    hold on;
+    plot(tempInfo.size_subset,'b');
+    hold off;
+    
+    fileName = ['./Test/info_dmax_hannover_sicp' int2str(i) '.mat'];
+    tempInfo = load(fileName);
+    tempInfo = tempInfo.info_sicp{end};
+    endTransformation = tempInfo.evolution_transformation(end,:)
+    A_trans = transformPointCloud(A,endTransformation);
+    err = computeAverageErrorWithNN(B,A_trans)
+    n_sicp = [n_sicp err];
+    
+    figure(2);
+    hold on;
+    plot(tempInfo.size_subset,'r');
+    hold off;
+    
+    pause();
 end
 
-plot(dm,n);
-axis([0 2000 0 100])
+figure(1);
+hold on;
+plot(dm,n_gicp,'r','LineWidth',2);
+plot(dm,n_sicp,'b','LineWidth',2);
+hold off;
+axis([0 2000 40 70]);
+xlabel('dmax (cm)');
+ylabel('Average error (cm)');
+title('Hannover scans (1500 points)');
+legend('Generalized ICP','Standard ICP');

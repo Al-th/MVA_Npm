@@ -34,7 +34,8 @@ covB = covB(1:subsampling:end,:,:);
 %Define value of dMax to test
 dMax_bunny = [0.02:0.01:0.1 0.1 0.2 0.3 0.4 0.6 0.8 1];
 
-n = [];
+n_sicp = [];
+n_gicp = [];
 dm = [];
 for i = 2:size(dMax_bunny,2)
     fileName = sprintf('./Test/info_dmax_bunny_gicp_%-4.2f.mat',dMax_bunny(i));
@@ -43,10 +44,25 @@ for i = 2:size(dMax_bunny,2)
     endTransformation = tempInfo.evolution_transformation(end,:)
     A_trans = transformPointCloud(A,endTransformation);
     err = computeAverageErrorWithNN(B,A_trans)
-    n = [n err]
+    n_gicp = [n_gicp err]
+    
+    fileName = sprintf('./Test/info_dmax_bunny_sicp_%-4.2f.mat',dMax_bunny(i));
+    tempInfo = load(fileName);
+    tempInfo = tempInfo.info_sicp;
+    endTransformation = tempInfo.evolution_transformation(end,:)
+    A_trans = transformPointCloud(A,endTransformation);
+    err = computeAverageErrorWithNN(B,A_trans)
+    n_sicp = [n_sicp err]
     dm = [dm tempInfo.dMax]
 end
 
-plot(dm,n.*1000);
-xlabel('dmax');
-ylabel('Average error (m)');
+figure(1);
+hold on;
+plot(dm,n_gicp,'r','LineWidth',2);
+plot(dm,n_sicp,'b','LineWidth',2);
+hold off;
+axis([0 2000 40 70]);
+xlabel('dmax (cm)');
+ylabel('Average error (cm)');
+title('Hannover scans (1500 points)');
+legend('Generalized ICP','Standard ICP');
