@@ -24,6 +24,8 @@ covB = covB(1:subsampling:end,:,:);
 
 %%
 Rx = [20:5:65];
+
+n_gicp = [];
 for j = 1:size(Rx,2)
     fileNameRx = ['./Test/info_Rx_bunny_gicp_-' int2str(Rx(j)) '.0.mat'];
     tempInfoRx = load(fileNameRx);
@@ -36,7 +38,17 @@ for j = 1:size(Rx,2)
         err = computeAverageErrorWithNN(B,A_trans);
         nGicp = [nGicp err];
     end
-
+    n_gicp = [n_gicp nGicp(end)];
     plot(nGicp)
     pause();
 end
+
+%%
+figure(1);
+hold on;
+plot(dm,n_gicp,'r','LineWidth',2);
+hold off;
+%axis([0 2000 40 70]);
+xlabel('Rotation along x-axis (degre)');
+ylabel('Average error (cm)');
+title('Bunny scans (1529 points)');
