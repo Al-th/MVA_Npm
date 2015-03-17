@@ -57,11 +57,13 @@ Afin d'évaluer l'influence de $d_{max}$ sur la performance de la méthode propo
    \label{fig:subset_dmax}
 \end{figure}
 
-Tout d'abord, on peut constater que pour une valeur trop faible de $d_{max}$, l'algorithme ne converge ni sur les données synthétiques, ni sur les données réelles car l'ensemble des points appariés est trop faible pour permettre à l'algorithme de converger (comme le montre le nombre de points appariés lors de la première itération de l'algorithme pour une valeur faible de $d_{max}$ sur la figure \ref{fig:subset_dmax}).
+Tout d'abord, on peut constater que pour une valeur trop faible de $d_{max}$, l'algorithme ne converge ni sur les données synthétiques, ni sur les données réelles car l'ensemble des points appariés est trop faible pour permettre à l'algorithme de converger (comme le montre le nombre de points appariés lors de la première itération de l'algorithme pour une valeur faible de $d_{max}$ sur la figure \ref{fig:subset_dmax}).\\
 
-L'absence d'occlusion et l'échantillonnage identique entre les deux nuages synthétiques entrainent une influence nulle de $d_{max}$ sur la performance du recalage sur les données synthétiques. En effet, les nuages de point parviennent toujours à se recaler.
+L'absence d'occlusion et l'échantillonnage identique entre les deux nuages synthétiques entrainent une influence nulle de $d_{max}$ sur la performance du recalage sur les données synthétiques. En effet, les nuages de point parviennent toujours à se recaler.\\
 
-Au contraire, sur les données réelles, on peut voir que l'erreur moyenne se dégrade pour l'ICP standard lorsque $d_{max}$ dépasse une certaine valeur, $d_{max}=200$. Tandis que l'influence sur GICP reste très faible. En effet, de nombreux appariements sont inexactes lorsque la valeur de $d_{max}$ est élevée ce qui à pour conséquence d'éloigner le résultat de la solution exacte. Cependant, pour GICP, ces appariements erronés contribue très peu à la fonction de coût car ils ont peu de chance d'être coplanaire (voir la figure \ref{fig_cov}). Ainsi, comme le montre la figure \ref{fig:err_dmax_reelle}, l'erreur moyenne est stable lorsque la valeur de $d_{max}$ augmente pour GICP tandis qu'elle se dégrade pour l'ICP standard.
+Au contraire, sur les données réelles, on peut voir que l'erreur moyenne se dégrade pour l'ICP standard lorsque $d_{max}$ dépasse une certaine valeur, $d_{max}=200$. Tandis que l'influence sur GICP reste très faible. En effet, de nombreux appariements sont inexactes lorsque la valeur de $d_{max}$ est élevée ce qui à pour conséquence d'éloigner le résultat de la solution exacte.\\
+
+Cependant, pour GICP, ces appariements erronés contribue très peu à la fonction de coût car ils ont peu de chance d'être coplanaire (voir la figure \ref{fig_cov}). Ainsi, comme le montre la figure \ref{fig:err_dmax_reelle}, l'erreur moyenne est stable lorsque la valeur de $d_{max}$ augmente pour GICP tandis qu'elle se dégrade pour l'ICP standard.\\
 
 \begin{figure}[!h]
    \centering
@@ -81,8 +83,17 @@ Au contraire, sur les données réelles, on peut voir que l'erreur moyenne se d�
    \label{fig:meshlab}
 \end{figure}
 
-Enfin, on peut aussi observer que l'erreur moyenne obtenue par GICP est toujours inférieure ou égale à celle obtenue par ICP standard. Mettant ainsi en évidence la meilleure performance de GICP par rapport à l'ICP Standard.
+De plus on peut aussi observer que l'erreur moyenne obtenue par GICP est toujours inférieure ou égale à celle obtenue par ICP standard. Mettant ainsi en évidence la meilleure performance de GICP par rapport à l'ICP Standard.\\
 
+\begin{figure}[!h]
+     \centering
+     \includegraphics[scale=0.4]{Images/Resultats/hannover_dmax200_diffconvergence.jpg}
+     \caption{Comparaison de la vitesse de convergence sur les données réelles pour $d_{max}=200$ entre GICP et ICP standard.}
+	\label{fig:GICP_convergence}
+\end{figure}
+
+Enfin, comme le montre la figure \ref{fig:GICP_convergence}, on constate que GICP converge beaucoup plus rapidement que l'ICP Standard.
+   
 \subsection{Etude de l'influence de l'offset}
 
 
@@ -103,5 +114,5 @@ Enfin, on peut aussi observer que l'erreur moyenne obtenue par GICP est toujours
    \end{subfigure}
    
    \caption{Comparaison des résultats obtenus avec la formule analytique de l'ICP standard (en rouge) et avec le framework de GICP (en bleu).}
-   \label{fig:meshlab}
+   \label{fig:closedform_ICP}
 \end{figure}
