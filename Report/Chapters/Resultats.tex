@@ -4,7 +4,7 @@ Afin d'analyser les performances de la méthode proposée par \cite{bib_gicp}, n
 Etant donné que GICP utilise l'information des surfaces de chacun des nuages de points, l'algorithme présente donc théoriquement une meilleure robustesse à la différence d'échantillonnage entre les deux nuages de points. Ainsi, l'ensemble des tests seront réalisés à la fois sur une paire de scans synthétiques présentée dans la figure \ref{fig_nuage_bunny} et une paire de scans réelles acquise par l'université de Hannovre présentée dans la figure \ref{fig_nuage_recalage} . On dispose pour les scans réels de l'estimation de leur poses, i.e une matrice de transformation $T^*$, afin de s'en servir de vérité terrain. Enfin, pour générer la paire de scans synthétiques, une transformation connue $T^{*}$ est appliquée sur le nuage de points synthétiques puis la position des points du nuage transformé est modifié par un bruit gaussien.\\
 
 La transformation initiale $T_0$ est définie comme la transformation exacte $T^*$ auquel on ajoute une erreur entre $\pm1.5m$ et $\pm15^{\circ}$ selon tous les axes. Afin d'évaluer les performances, on mesure l'erreur de position moyenne $||B - \mathbf{T}(A)||_2$ (expliquer comme on gère lorsque les nuages ne sont pas échantillonnés pareil dans la prochaine partie (erreur plus élevée, NN plus compliqué). 
-\subsubsection{Etude de l'influence de $d_{max}$}
+\subsection{Etude de l'influence de $d_{max}$}
 %Explication de d_max
 La mise en correspondance des points des deux nuages est une étape cruciale de l'algorithme ICP. La solution la plus répandue consiste à apparier les points par recherche du plus proche voisin. Cependant les nuages ne se recoupent pas complètement ainsi certains points d'un nuage ne corresponde à aucun point de l'autre nuage (occlusion, recouvrement partiel). Pour prendre cela en compte, une solution est de retirer les points appariés dont la distance est supérieure à un seuil $d_{max}$.\\
 
@@ -19,45 +19,89 @@ Afin d'évaluer l'influence de $d_{max}$ sur la performance de la méthode propo
    \centering
    \begin{subfigure}[t]{.5\linewidth}
      \centering
-     \includegraphics[scale=0.4]{Images/bunny_evol_error_dmax.jpg}
+     \includegraphics[scale=0.4]{Images/Resultats/bunny_evol_error_dmax.jpg}
      \caption{Données synthétiques}
+     \label{fig:err_dmax_synthe}
    \end{subfigure}%
    ~
    \begin{subfigure}[t]{.5\linewidth}
      \centering
-     \includegraphics[scale=0.4]{Images/hannover_evol_error_dmax.jpg}
+     \includegraphics[scale=0.4]{Images/Resultats/hannover_evol_error_dmax.jpg}
      \caption{Données réelles}
+     \label{fig:err_dmax_reelle}
    \end{subfigure}
    
    \caption{Evolution de l'erreur de position moyenne en fonction de la valeur du seuil $d_{max}$.}
    \label{fig:err_dmax}
 \end{figure}
 
-Tout d'abord, on peut observer sur la figure \ref{fig:err_dmax} que l'influence de $d_{max}$ sur les données synthétiques est très faible.
-De même, $d_{max}$ influence très peu le résultat lorsque GICP est appliqué sur les données réelles.
-Au contraire, sur les données réelles qui présentent des occlusions et un recouvrement partiel, la valeur de $d_{max}$ influence fortement l'erreur pour Standard ICP 
 
 
 \begin{figure}[!h]
    \centering
    \begin{subfigure}[t]{.5\linewidth}
      \centering
-     \includegraphics[scale=0.5]{Images/hannover_meshlab_before_transformation.jpg}
+     \includegraphics[scale=0.4]{Images/Resultats/bunny_size_subset_dmax.jpg}
+     \caption{Données synthétiques}
+     \label{fig:subset_dmax_synthe}
+   \end{subfigure}%
+   ~
+   \begin{subfigure}[t]{.5\linewidth}
+     \centering
+     \includegraphics[scale=0.4]{Images/Resultats/hannover_size_subset_dmax.jpg}
+     \caption{Données réelles}
+     \label{fig:subset_dmax_reelle}
+   \end{subfigure}
+   
+   \caption{Evolution du nombre de points appariés lors de la première itération de l'algorithme en fonction de la valeur du seuil $d_{max}$.}
+   \label{fig:subset_dmax}
+\end{figure}
+
+Tout d'abord, on peut constater que pour une valeur trop faible de $d_{max}$, l'algorithme ne converge ni sur les données synthétiques, ni sur les données réelles car l'ensemble des points appariés est trop faible pour permettre à l'algorithme de converger (comme le montre le nombre de points appariés lors de la première itération pour une valeur faible de $d_{max}$ de l'algorithme sur la figure \ref{fig:subset_dmax}).
+
+L'absence d'occlusion et l'échantillonnage identique entre les deux nuages synthétiques entrainent une influence nulle de $d_{max}$ sur la performance du recalage sur les données synthétiques. En effet, les nuages de point parviennent toujours à se recaler.
+
+Au contraire, sur les données réelles, on peut voir que l'erreur moyenne se dégrade pour l'ICP standard lorsque $d_{max}$ dépasse une certaine valeur, $d_{max}=200$. Tandis que l'influence sur GICP reste très faible. En effet, de nombreux appariements sont inexactes lorsque la valeur de $d_{max}$ est élevée ce qui à pour conséquence d'éloigner le résultat de la solution exacte. Cependant, pour GICP, ces appariements erronés contribue très peu à la fonction de coût car ils ont peu de chance d'être coplanaire (voir la figure \ref{fig_cov}). Ainsi, comme le montre la figure \ref{fig:err_dmax_reelle}, l'erreur moyenne est stable lorsque la valeur de $d_{max}$ augmente pour GICP tandis qu'elle se dégrade pour l'ICP standard.
+
+\begin{figure}[!h]
+   \centering
+   \begin{subfigure}[t]{.5\linewidth}
+     \centering
+     \includegraphics[scale=0.5]{Images/Resultats/hannover_meshlab_before_transformation.jpg}
      \caption{Nuages avant recalage}
    \end{subfigure}%
    ~
    \begin{subfigure}[t]{.5\linewidth}
      \centering
-     \includegraphics[scale=0.5]{Images/hannover_meshlab_after_transformation.jpg}
+     \includegraphics[scale=0.5]{Images/Resultats/hannover_meshlab_after_transformation.jpg}
      \caption{Nuages après recalage}
    \end{subfigure}
    
    \caption{A REMPLIR.}
    \label{fig:meshlab}
 \end{figure}
-%Analyse des résultats
-\subsubsection{Etude de l'influence de l'offset}
+
+Enfin, on peut aussi observer que l'erreur moyenne obtenue par GICP est toujours inférieure ou égale à celle obtenue par ICP standard. Mettant ainsi en évidence la meilleure performance de GICP par rapport à l'ICP Standard.
+
+\subsection{Etude de l'influence de l'offset}
 
 
-\subsubsection{Standard ICP par solution analytique}
+\subsection{Standard ICP par solution analytique}
 
+\begin{figure}[!h]
+   \centering
+   \begin{subfigure}[t]{.5\linewidth}
+     \centering
+     \includegraphics[scale=0.4]{Images/Resultats/hannover_diff_ICP_closed_form_dmax.jpg}
+     \caption{Erreur moyenne}
+   \end{subfigure}%
+   ~
+   \begin{subfigure}[t]{.5\linewidth}
+     \centering
+     \includegraphics[scale=0.4]{Images/Resultats/hannover_diff_time_ICP_closed_form_dmax.jpg}
+     \caption{Temps d'exécution}
+   \end{subfigure}
+   
+   \caption{Comparaison des résultats obtenus avec la formule analytique de l'ICP standard (en rouge) et avec le framework de GICP (en bleu).}
+   \label{fig:meshlab}
+\end{figure}

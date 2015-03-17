@@ -46,7 +46,7 @@ end
 %%
 figure(1);
 hold on;
-plot(dm,n_gicp,'r','LineWidth',2);
+plot(Rx,n_gicp,'r','LineWidth',2);
 hold off;
 %axis([0 2000 40 70]);
 xlabel('Rotation along x-axis (degre)');
