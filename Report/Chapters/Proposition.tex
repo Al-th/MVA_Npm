@@ -20,7 +20,7 @@ On souhaite minimiser la distance $d_{i}^{\mathbf{T}}$, ainsi on souhaite maximi
 &=& \underset{\mathbf{T}}{\text{arg min}} \sum_{i} d_{i}^{(\mathbf{T})^T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})^{-1}d_{i}^{(\mathbf{T})}
 \end{eqnarray}
 
-Le terme d'erreur unitaire $d_{i}^{(\mathbf{T})^T}(C_{i}^B+\mathbf{T}^{T}C_{i}^{A}\mathbf{T})^{-1}d_{i}^{(\mathbf{T})}$  est une distance probabiliste qui prends en compte la densité de probabilité des points dans l'espace $\mathbb{R}^{3})$. Jusqu'à maintenant, les matrice de covariance $C_{i}^A$ et $C_{i}^B$ n'ont pas été définie. C'est le choix de ces matrices qui va déterminer dans quel cadre on souhaite résoundre la minimisation.\\
+Le terme d'erreur unitaire $d_{i}^{(\mathbf{T})^T}(C_{i}^B+\mathbf{T}^{T}C_{i}^{A}\mathbf{T})^{-1}d_{i}^{(\mathbf{T})}$  est une distance probabiliste qui prends en compte la densité de probabilité des points dans l'espace $\mathbb{R}^{3})$. Jusqu'à maintenant, les matrices de covariance $C_{i}^A$ et $C_{i}^B$ n'ont pas été définies. C'est le choix de ces matrices qui va déterminer dans quel cadre on souhaite résoudre la minimisation.\\
 
 En effet, si l'on choisi $C_{i}^B = Id$ et $C_{i}^A = 0$, on se place par exemple dans le cadre de l'ICP standard :
 
@@ -39,7 +39,7 @@ Dans \cite{bib_gicp}, Segal et al. proposent une extension de l'ICP standard et 
  \end{pmatrix}
 \end{equation}
 
-Afin de calculer ces matrices de covariances dans le cas de nuages de points réel, il y a donc une étape d'estimation des normales du nuage de point. Les auteurs indiquent utiliser une méthode d'estimation de normales par PCA sur les 20 plus proches voisins. En pratique, cela consiste à trouver dans le nuage de points les 20 plus proches voisins du point où l'on cherche à estimer la normale. Dans un second temps, on calcule la matrice de covariance $\hat{\Sigma}$ de l'ensemble de ces points. Enfin, on calcule la SVD de $\hat{\Sigma}$ : $\hat{\Sigma} = UDU^{T}$. La matrice $U$ contient les vecteurs propres de la matrice de covariance des points, et le vecteur qui correspond à la plus petite valeur propre est dans la direction de la normale. Ainsi, en remplaçant la matrice D par la matrice décrite plus haut on a (dans le cas ou la plus petite valeur propre correspond au premier vecteur propre) :
+Afin de calculer ces matrices de covariances dans le cas de nuages de points réel, il y a donc une étape d'estimation des normales du nuage de point. Les auteurs utilisent une méthode d'estimation de normales par PCA sur les 20 plus proches voisins. En pratique, cela consiste à trouver dans le nuage de points les 20 plus proches voisins du point où l'on cherche à estimer la normale. Dans un second temps, on calcule la matrice de covariance $\hat{\Sigma}$ de l'ensemble de ces points. Enfin, on calcule la SVD de $\hat{\Sigma}$ : $\hat{\Sigma} = UDU^{T}$. La matrice $U$ contient les vecteurs propres de la matrice de covariance des points, et le vecteur qui correspond à la plus petite valeur propre est dans la direction de la normale. Ainsi, en remplaçant la matrice D par la matrice décrite plus haut on a (dans le cas où la plus petite valeur propre correspond au premier vecteur propre) :
 
 \begin{equation}
 C_{i}^B = U_{i}^B.\begin{pmatrix} 
@@ -54,7 +54,7 @@ On peut réaliser le même calcul pour $C_{i}^A$.
 L'intuition de l'influence de ces matrices de covariance est la suivante :\\
 
 \begin{itemize}
-\item{Dans le cas ou les normales sont colinéaires après transformation du second nuage de point, la somme des matrices de covariances $C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T}$ est une matrice qui reste anisotrope. La distance unitaire ${d_{i}^{(\mathbf{T})}}^{T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})d_{i}^{(\mathbf{T})}$ sera donc fortement impactée si les points sont éloignés dans la direction de la normale.  
+\item{Dans le cas ou les normales sont colinéaires après transformation du second nuage de points, la somme des matrices de covariances $C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T}$ est une matrice qui reste anisotrope. La distance unitaire ${d_{i}^{(\mathbf{T})}}^{T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})d_{i}^{(\mathbf{T})}$ sera donc fortement impactée si les points sont éloignés dans la direction de la normale.  
 }
 
 \item{Dans le cas ou les normales ne sont pas colinéaires (par exemple dans le cas extrêmes ou elles sont orthogonales}, la somme des matrices de covariances va être de plus en plus isotrope. Ainsi la distance unitaire calculée ${d_{i}^{(\mathbf{T})}}^{T}(C_{i}^B + \mathbf{T}^{T}C_{i}^{A}\mathbf{T})d_{i}^{(\mathbf{T})}$ aura moins d'influence dans le calcul de la fonction de coût.
