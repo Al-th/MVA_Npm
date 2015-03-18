@@ -1,16 +1,16 @@
 \section{Résultats}
-Afin d'analyser les performances de la méthode proposée par \cite{bib_gicp}, nous avons tout d'abord chercher à étudier l'influence du critère $d_{max}$ appliquer lors de l'appariement des points, la robustesse de l'algorithme face à des changement de poses différents et la différence de résultats entre le Standard ICP obtenu avec la formule analytique et le Standard ICP obtenu avec le modèle probabilistique présenté dans l'article. (en posant $C_{i}^B=Id$ et $C_{i}^A=0$).\\
+Afin d'analyser les performances de la méthode proposée par \cite{bib_gicp}, nous avons tout d'abord cherché à étudier l'influence du critère $d_{max}$ qui rentre en compte lors de l'appariement des points. Dans un second temps nous avons voulu évaluer la robustesse de l'algorithme face à différentes transformations initiales et enfin la différence de résultats entre l' ICP standard obtenu avec la formule analytique et l'ICP standard obtenu avec le modèle probabiliste présenté dans l'article (en posant $C_{i}^B=Id$ et $C_{i}^A=0$).\\
 
-Etant donné que GICP utilise l'information des surfaces de chacun des nuages de points, l'algorithme présente donc théoriquement une meilleure robustesse à la différence d'échantillonnage entre les deux nuages de points. Ainsi, l'ensemble des tests seront réalisés à la fois sur une paire de scans synthétiques présentée dans la figure \ref{fig_nuage_bunny} et une paire de scans réelles acquise par l'université de Hannovre présentée dans la figure \ref{fig_nuage_recalage} . On dispose pour les scans réels de l'estimation de leur poses, i.e une matrice de transformation $T^*$, afin de s'en servir de vérité terrain. Enfin, pour générer la paire de scans synthétiques, une transformation connue $T^{*}$ est appliquée sur le nuage de points synthétiques puis la position des points du nuage transformé est modifié par un bruit gaussien.\\
+Étant donné que GICP utilise l'information des surfaces de chacun des nuages de points, l'algorithme présente théoriquement une meilleure robustesse à la différence d'échantillonnage entre les deux nuages de points. Ainsi, l'ensemble des tests seront réalisés à la fois sur une paire de scans synthétiques présentée dans la figure \ref{fig_nuage_bunny} et une paire de scans réels acquise par l'université de Hannovre présentée dans la figure \ref{fig_nuage_recalage} . On dispose pour les scans réels de l'estimation de leur poses, i.e une matrice de transformation $\hat{\mathbf{T}}$ que nous pouvons utiliser comme vérité terrain. Enfin, pour générer la paire de scans synthétiques, une transformation connue $T^{*}$ est appliquée sur le nuage de points synthétiques puis la position des points du nuage transformé est modifié par un bruit gaussien.\\
 
-La transformation initiale $\mathbf{T}_0$ est définie comme la transformation exacte $\mathbf{T}^*$ auquel on ajoute une erreur entre $\pm1.5m$ et $\pm15^{\circ}$ selon tous les axes. Afin d'évaluer les performances, on mesure l'erreur de position moyenne $||B - \mathbf{T}(A)||_2$ (expliquer comme on gère lorsque les nuages ne sont pas échantillonnés pareil dans la prochaine partie (erreur plus élevée, NN plus compliqué). 
+La transformation initiale $\mathbf{T}_0$ est définie comme la transformation exacte $\mathbf{T}^*$ auquel on ajoute une erreur en translation ($\pm2m$ pour la base Hannovre, $\pm0.1cm$ pour \textit{bunny}) et en rotation ($\pm15^{\circ}$ selon tous les axes). Afin d'évaluer les performances, on mesure l'erreur de position moyenne $||B - \mathbf{T}(A)||_2$ %TODO (expliquer comme on gère lorsque les nuages ne sont pas échantillonnés pareil dans la prochaine partie (erreur plus élevée, NN plus compliqué). 
 \subsection{Etude de l'influence de $d_{max}$}
 \label{part:influencedmax}
 %Explication de d_max
 La mise en correspondance des points des deux nuages est une étape cruciale de l'algorithme ICP. La solution la plus répandue consiste à apparier les points par recherche du plus proche voisin. Cependant les nuages ne se recoupent pas complètement ainsi certains points d'un nuage ne corresponde à aucun point de l'autre nuage (occlusion, recouvrement partiel). Pour prendre cela en compte, une solution est de retirer les points appariés dont la distance est supérieure à un seuil $d_{max}$.\\
 
-%Etude théorique : +dmax petit, +précis mais moins de chance de convergence et inversement
-En général, le choix de $d_{max}$ est un compromis entre la précision de l'algorithme et sa portée de convergence. En effet, une valeur faible de $d_{max}$ entraîne un faible nombre de points appariés rendant la convergence de l'algorithme plus difficile. Au contraire, une valeur plus élevée de $d_{max}$ peut causer des appariements inexactes et ainsi éloigner l'estimation de la transformation de sa valeur exacte. 
+%TODO Etude théorique : +dmax petit, +précis mais moins de chance de convergence et inversement
+En général, le choix de $d_{max}$ est un compromis entre la précision de l'algorithme et sa portée de convergence. En effet, une valeur faible de $d_{max}$ entraîne un faible nombre de points appariés rendant la convergence de l'algorithme plus difficile. Au contraire, une valeur plus élevée de $d_{max}$ peut causer des appariements inexactes et ainsi éloigner l'estimation de la transformation de sa valeur exacte.\\
 
 %Présentation des résultats
 Afin d'évaluer l'influence de $d_{max}$ sur la performance de la méthode proposée, l'erreur de position moyenne a été mesuré sur les résultats obtenus par l'algorithme standard de l'ICP et par GICP pour différentes valeurs de $d_{max}$ sur les jeux de donnée  synthétique et réel.\\
@@ -60,11 +60,9 @@ Afin d'évaluer l'influence de $d_{max}$ sur la performance de la méthode propo
 
 Tout d'abord, on peut constater que pour une valeur trop faible de $d_{max}$, l'algorithme ne converge ni sur les données synthétiques, ni sur les données réelles car l'ensemble des points appariés est trop faible pour permettre à l'algorithme de converger (comme le montre le nombre de points appariés lors de la première itération de l'algorithme pour une valeur faible de $d_{max}$ sur la figure \ref{fig:subset_dmax}).\\
 
-L'absence d'occlusion et l'échantillonnage identique entre les deux nuages synthétiques entrainent une influence nulle de $d_{max}$ sur la performance du recalage sur les données synthétiques. En effet, les nuages de point parviennent toujours à se recaler.\\
+L'absence d'occlusion, l'échantillonnage identique, et l'absence d'outliers entre les deux nuages synthétiques entrainent une influence nulle de $d_{max}$ sur la performance du recalage sur les données synthétiques. En effet, les nuages de point parviennent toujours à se recaler (figure \ref{fig:err_dmax_synthe}).\\
 
-Au contraire, sur les données réelles, on peut voir que l'erreur moyenne se dégrade pour l'ICP standard lorsque $d_{max}$ dépasse une certaine valeur, $d_{max}=200$. Tandis que l'influence sur GICP reste très faible. En effet, de nombreux appariements sont inexactes lorsque la valeur de $d_{max}$ est élevée ce qui à pour conséquence d'éloigner le résultat de la solution exacte.\\
-
-Cependant, pour GICP, ces appariements erronés contribue très peu à la fonction de coût car ils ont peu de chance d'être coplanaire (voir la figure \ref{fig_cov}). Ainsi, comme le montre la figure \ref{fig:err_dmax_reelle}, l'erreur moyenne est stable lorsque la valeur de $d_{max}$ augmente pour GICP tandis qu'elle se dégrade pour l'ICP standard.\\
+Au contraire, sur les données réelles, on peut voir que l'erreur moyenne se dégrade pour l'ICP standard lorsque $d_{max}$ dépasse une certaine valeur, $d_{max}=200$ tandis que l'influence sur GICP reste très faible. En effet, de nombreux appariements sont inexactes lorsque la valeur de $d_{max}$ est élevée, ce qui à pour conséquence d'éloigner le résultat de la solution exacte. Pour GICP, ces appariements erronés contribue cependant très peu à la fonction de coût car les plans locaux à ces points ne sont pas forcément coplanaires (voir la figure \ref{fig_cov}). Ainsi, comme le montre la figure \ref{fig:err_dmax_reelle}, l'erreur moyenne est stable lorsque la valeur de $d_{max}$ augmente pour GICP tandis qu'elle se dégrade pour l'ICP standard.\\
 
 \begin{figure}[!h]
    \centering
@@ -84,7 +82,7 @@ Cependant, pour GICP, ces appariements erronés contribue très peu à la foncti
    \label{fig:meshlab}
 \end{figure}
 
-De plus on peut aussi observer que l'erreur moyenne obtenue par GICP est toujours inférieure ou égale à celle obtenue par ICP standard. Mettant ainsi en évidence la meilleure performance de GICP par rapport à l'ICP Standard.\\
+De plus on peut observer que l'erreur moyenne obtenue par GICP est inférieure ou égale à celle obtenue par ICP standard, cela tend à mettre en évidence une meilleure performance de GICP par rapport à l'ICP Standard.\\
 
 \begin{figure}[!h]
      \centering
@@ -93,15 +91,14 @@ De plus on peut aussi observer que l'erreur moyenne obtenue par GICP est toujour
 	\label{fig:GICP_convergence}
 \end{figure}
 
-Enfin, comme le montre la figure \ref{fig:GICP_convergence}, on constate que GICP converge beaucoup plus rapidement que l'ICP Standard. (ajouter un commentaire sur le temps d'exécution GICP<<sICP car converge plus rapidement).
+Enfin, comme le montre la figure \ref{fig:GICP_convergence}, on constate que GICP converge beaucoup plus rapidement que l'ICP Standard. 
+%TODO ajouter un commentaire sur le temps d'exécution GICP<<sICP car converge plus rapidement).
    
-\subsection{Etude de l'influence de l'offset}
+\subsection{Étude de l'influence de l'offset}
 
-La méthode de comparaison qu'applique Segal et al. utilise toujours une transformation initiale $\mathbf{T}_0$ qui est définie comme la transformation exacte $\mathbf{T}^*$ auquelle est ajoutée une erreur entre $\pm1.5m$ et $\pm15^{\circ}$ selon tous les axes. 
+Pour évaluer les différents algorithmes, Segal et al. utilisent une transformation initiale $\mathbf{T}_0$ qui est définie comme la transformation exacte $\mathbf{T}^*$ à laquelle est ajoutée une erreur entre $\pm1.5m$ et $\pm15^{\circ}$ selon tous les axes. \\
 
-L'idée ici est de comparer GICP et l'ICP standard pour des valeurs de $T_0$ beaucoup plus éloignées de $T^*$ afin d'étudier leurs robustesses face à la transformation initiale $T_0$.
-
-Pour cela, nous avons fixé la matrice $\mathbf{T}_0=\mathbf{T}^*+\epsilon $ où $\epsilon$ est un terme d'erreur constant compris entre $\pm1.5m$ et $\pm15^{\circ}$ selon tous les axes puis nous avons fait varier l'erreur de la rotation $\theta$ autour de l'axe des $x$ entre $[-20^{\circ} -65^{\circ}]$.
+L'idée ici est de comparer GICP et l'ICP standard pour des valeurs de $T_0$ qui s'éloignent de $T^*$ afin d'étudier la robustesse des deux algorithmes. Pour cela, nous avons fixé la matrice $\mathbf{T}_0=\mathbf{T}^*+\epsilon $ où $\epsilon$ est un terme d'erreur constant compris entre $\pm0.1cm$ et $\pm15^{\circ}$ selon tous les axes puis nous avons fait varier l'erreur de la rotation $\theta$ autour de l'axe des $x$ entre $[-20^{\circ} -65^{\circ}]$.\\
 
 \begin{figure}[!h]
    \centering
@@ -117,14 +114,14 @@ Pour cela, nous avons fixé la matrice $\mathbf{T}_0=\mathbf{T}^*+\epsilon $ où
      \caption{Generalized ICP}
    \end{subfigure}
    
-   \caption{Evolution de l'erreur de position moyenne en fonction de la rotation $\theta$ selon l'axe des $x$ de $\mathbf{T}_0$ sur des données synthétiques.}
+   \caption{Évolution de l'erreur de position moyenne en fonction de la rotation $\theta$ selon l'axe des $x$ de $\mathbf{T}_0$ sur des données synthétiques.}
    \label{fig:offset}
 \end{figure}
 
 
-La figure \ref{fig:offset} montre l'évolution de l'erreur moyenne de position obtenue par GICP et ICP standard en fonction de la valeur de l'angle $\theta$. On constate qu'à partir d'une certaine valeur ($\theta = -60^{\circ}$), GICP ne converge plus. Au contraire, l'ICP standard continue à converger quelque soit la valeur de $\theta$.
+La figure \ref{fig:offset} montre l'évolution de l'erreur moyenne de position obtenue par GICP et ICP standard en fonction de la valeur de l'angle $\theta_{x}$. On constate qu'à partir d'une certaine valeur ($\theta = -60^{\circ}$), GICP ne converge plus. L'ICP standard continue à converger sur les valeurs de $\theta_{x}$ que nous avons testé.\\
 
-Ainsi, la robustesse de la méthode Generalized ICP à l'offset initial $\mathbf{T}_0$ est moins bonne que pour l'ICP standard. Il est donc important d'avoir une transformation initiale $\mathbf{T}_0$ pas trop éloignée de la transformation exacte $\mathbf{T}^*$.
+Ainsi, la robustesse de la méthode Generalized ICP à l'offset initial $\mathbf{T}_0$ semble moins bonne que pour l'ICP standard. Il est donc important, lors de l'utilisation de GICP, d'avoir une transformation initiale $\mathbf{T}_0$ pas trop éloignée de la transformation exacte $\mathbf{T}^*$.
 
 \subsection{Standard ICP par solution analytique}
 
@@ -152,4 +149,4 @@ Pour cela, nous avons testé l'ICP standard par formule analytique pour les mêm
    \label{fig:closedform_ICP}
 \end{figure}
 
-En revanche, comme le montre la figure \ref{fig:CFICP:time}, le temps d'exécution est beaucoup plus long avec le framework GICP. Cette forte différence s'explique par l'utilisation d'une méthode de Quasi-newton pour a minimisation de l'énergie dans le framework GICP qui est très longue tandis que la minimisation est explicite dans la formule analytique de l'ICP.
+En revanche, comme le montre la figure \ref{fig:CFICP:time}, le temps d'exécution est beaucoup plus long avec le framework GICP. Cette forte différence s'explique par l'utilisation, dans notre implémentation, d'une fonction de minimisation par Quasi-newton tandis que la minimisation est explicite dans la formule analytique de l'ICP. La méthode de minimisation par descente de gradient conjugué dont il est fait mention dans \cite{bib_gicp} est sans doute plus rapide. 
