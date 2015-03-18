@@ -26,11 +26,12 @@ covB = covB(1:subsampling:end,:,:);
 Rx = [20:5:65];
 
 n_gicp = [];
+nb_iter = [];
 for j = 1:size(Rx,2)
-    fileNameRx = ['./Test/info_Rx_bunny_gicp_-' int2str(Rx(j)) '.0.mat'];
+    fileNameRx = ['./Test/info_Rx_bunny_sicp_-' int2str(Rx(j)) '.0.mat'];
     tempInfoRx = load(fileNameRx);
-    tempInfoRx = tempInfoRx.info_gicp;
-    nGicp =[];
+    tempInfoRx = tempInfoRx.info_sicp;
+    nGicp =[]; 
     
     for i = 1:size(tempInfoRx.evolution_transformation,1)
         transform = tempInfoRx.evolution_transformation(i,:);
@@ -39,12 +40,14 @@ for j = 1:size(Rx,2)
         nGicp = [nGicp err];
     end
     n_gicp = [n_gicp nGicp(end)];
+    nb_iter = [nb_iter size(tempInfoRx.size_subset,2)];
+    
     plot(nGicp)
     pause();
 end
 
 %%
-figure(1);
+figure(2);
 hold on;
 plot(Rx,n_gicp,'r','LineWidth',2);
 hold off;

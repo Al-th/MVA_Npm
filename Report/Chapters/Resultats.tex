@@ -3,7 +3,7 @@ Afin d'analyser les performances de la méthode proposée par \cite{bib_gicp}, n
 
 Etant donné que GICP utilise l'information des surfaces de chacun des nuages de points, l'algorithme présente donc théoriquement une meilleure robustesse à la différence d'échantillonnage entre les deux nuages de points. Ainsi, l'ensemble des tests seront réalisés à la fois sur une paire de scans synthétiques présentée dans la figure \ref{fig_nuage_bunny} et une paire de scans réelles acquise par l'université de Hannovre présentée dans la figure \ref{fig_nuage_recalage} . On dispose pour les scans réels de l'estimation de leur poses, i.e une matrice de transformation $T^*$, afin de s'en servir de vérité terrain. Enfin, pour générer la paire de scans synthétiques, une transformation connue $T^{*}$ est appliquée sur le nuage de points synthétiques puis la position des points du nuage transformé est modifié par un bruit gaussien.\\
 
-La transformation initiale $T_0$ est définie comme la transformation exacte $T^*$ auquel on ajoute une erreur entre $\pm1.5m$ et $\pm15^{\circ}$ selon tous les axes. Afin d'évaluer les performances, on mesure l'erreur de position moyenne $||B - \mathbf{T}(A)||_2$ (expliquer comme on gère lorsque les nuages ne sont pas échantillonnés pareil dans la prochaine partie (erreur plus élevée, NN plus compliqué). 
+La transformation initiale $\mathbf{T}_0$ est définie comme la transformation exacte $\mathbf{T}^*$ auquel on ajoute une erreur entre $\pm1.5m$ et $\pm15^{\circ}$ selon tous les axes. Afin d'évaluer les performances, on mesure l'erreur de position moyenne $||B - \mathbf{T}(A)||_2$ (expliquer comme on gère lorsque les nuages ne sont pas échantillonnés pareil dans la prochaine partie (erreur plus élevée, NN plus compliqué). 
 \subsection{Etude de l'influence de $d_{max}$}
 %Explication de d_max
 La mise en correspondance des points des deux nuages est une étape cruciale de l'algorithme ICP. La solution la plus répandue consiste à apparier les points par recherche du plus proche voisin. Cependant les nuages ne se recoupent pas complètement ainsi certains points d'un nuage ne corresponde à aucun point de l'autre nuage (occlusion, recouvrement partiel). Pour prendre cela en compte, une solution est de retirer les points appariés dont la distance est supérieure à un seuil $d_{max}$.\\
@@ -92,12 +92,42 @@ De plus on peut aussi observer que l'erreur moyenne obtenue par GICP est toujour
 	\label{fig:GICP_convergence}
 \end{figure}
 
-Enfin, comme le montre la figure \ref{fig:GICP_convergence}, on constate que GICP converge beaucoup plus rapidement que l'ICP Standard.
+Enfin, comme le montre la figure \ref{fig:GICP_convergence}, on constate que GICP converge beaucoup plus rapidement que l'ICP Standard. (ajouter un commentaire sur le temps d'exécution GICP<<sICP car converge plus rapidement).
    
 \subsection{Etude de l'influence de l'offset}
 
+La méthode de comparaison qu'applique Segal et al. utilise toujours une transformation initiale $\mathbf{T}_0$ qui est définie comme la transformation exacte $\mathbf{T}^*$ auquelle est ajoutée une erreur entre $\pm1.5m$ et $\pm15^{\circ}$ selon tous les axes. 
+
+L'idée ici est de comparer GICP et l'ICP standard pour des valeurs de $T_0$ beaucoup plus éloignées de $T^*$ afin d'étudier leurs robustesses face à la transformation initiale $T_0$.
+
+Pour cela, nous avons fixé la matrice $\mathbf{T}_0=\mathbf{T}^*+\epsilon $ où $\epsilon$ est un terme d'erreur constant compris entre $\pm1.5m$ et $\pm15^{\circ}$ selon tous les axes puis nous avons fait varier l'erreur de la rotation $\theta$ autour de l'axe des $x$ entre $[-20^{\circ} -65^{\circ}]$.
+
+\begin{figure}[!h]
+   \centering
+   \begin{subfigure}[t]{.5\linewidth}
+     \centering
+     \includegraphics[scale=0.4]{Images/Resultats/bunny_offset_evol-error_sicp.jpg}
+     \caption{Standard ICP}
+   \end{subfigure}%
+   ~
+   \begin{subfigure}[t]{.5\linewidth}
+     \centering
+     \includegraphics[scale=0.4]{Images/Resultats/bunny_offset_evol-error_gicp.jpg}
+     \caption{Generalized ICP}
+   \end{subfigure}
+   
+   \caption{Evolution de l'erreur de position moyenne en fonction de la rotation $\theta$ selon l'axe des $x$ de $\mathbf{T}_0$ sur des données synthétiques.}
+   \label{fig:offset}
+\end{figure}
+
+
+La figure \ref{fig:offset} montre l'évolution de l'erreur moyenne de position obtenue par GICP et ICP standard en fonction de la valeur de l'angle $\theta$. On constate qu'à partir d'une certaine valeur ($\theta = -60^{\circ}$), GICP ne converge plus. Au contraire, l'ICP standard continue à converger quelque soit la valeur de $\theta$.
+
+Ainsi, la robustesse de la méthode Generalized ICP à l'offset initial $\mathbf{T}_0$ est moins bonne que pour l'ICP standard. Il est donc important d'avoir une transformation initiale $\mathbf{T}_0$ pas trop éloignée de la transformation exacte $\mathbf{T}^*$.
 
 \subsection{Standard ICP par solution analytique}
+
+
 
 \begin{figure}[!h]
    \centering
