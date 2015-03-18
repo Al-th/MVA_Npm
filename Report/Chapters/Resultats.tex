@@ -5,6 +5,7 @@ Etant donné que GICP utilise l'information des surfaces de chacun des nuages de
 
 La transformation initiale $\mathbf{T}_0$ est définie comme la transformation exacte $\mathbf{T}^*$ auquel on ajoute une erreur entre $\pm1.5m$ et $\pm15^{\circ}$ selon tous les axes. Afin d'évaluer les performances, on mesure l'erreur de position moyenne $||B - \mathbf{T}(A)||_2$ (expliquer comme on gère lorsque les nuages ne sont pas échantillonnés pareil dans la prochaine partie (erreur plus élevée, NN plus compliqué). 
 \subsection{Etude de l'influence de $d_{max}$}
+\label{part:influencedmax}
 %Explication de d_max
 La mise en correspondance des points des deux nuages est une étape cruciale de l'algorithme ICP. La solution la plus répandue consiste à apparier les points par recherche du plus proche voisin. Cependant les nuages ne se recoupent pas complètement ainsi certains points d'un nuage ne corresponde à aucun point de l'autre nuage (occlusion, recouvrement partiel). Pour prendre cela en compte, une solution est de retirer les points appariés dont la distance est supérieure à un seuil $d_{max}$.\\
 
@@ -127,7 +128,9 @@ Ainsi, la robustesse de la méthode Generalized ICP à l'offset initial $\mathbf
 
 \subsection{Standard ICP par solution analytique}
 
+Comme présenté dans la partie \ref{part:impl_gicp}, le modèle probabiliste introduit par Segal permet d'implémenter différentes variantes de l'ICP en modifiant judicieusement les matrices de covariance $C_{i}^A$ et $C_{i}^B$. Ainsi, il est intéressant de comparer les résultats obtenus avec la version de l'ICP standard modélisé dans le framework GICP et les résultats obtenus avec la formule analytique de l'ICP standard. \\
 
+Pour cela, nous avons testé l'ICP standard par formule analytique pour les mêmes valeurs de $d_{max}$ que dans la partie \ref{part:influencedmax}. Les résultats sont présentés dans la figure \ref{fig:closedform_ICP}. On peut constater que l'erreur moyenne de position obtenu est pratiquement identique entre les deux méthodes sur la figure \ref{fig:CFICP:err}. Ainsi le modèle probabiliste présenté permet bien de retrouver l'ICP standard en posant  $C_{i}^A = 0$ et $C_{i}^B = Id$.\\
 
 \begin{figure}[!h]
    \centering
@@ -135,14 +138,18 @@ Ainsi, la robustesse de la méthode Generalized ICP à l'offset initial $\mathbf
      \centering
      \includegraphics[scale=0.4]{Images/Resultats/hannover_diff_ICP_closed_form_dmax.jpg}
      \caption{Erreur moyenne}
+     \label{fig:CFICP:err}
    \end{subfigure}%
    ~
    \begin{subfigure}[t]{.5\linewidth}
      \centering
      \includegraphics[scale=0.4]{Images/Resultats/hannover_diff_time_ICP_closed_form_dmax.jpg}
      \caption{Temps d'exécution}
+     \label{fig:CFICP:time}
    \end{subfigure}
    
    \caption{Comparaison des résultats obtenus avec la formule analytique de l'ICP standard (en rouge) et avec le framework de GICP (en bleu).}
    \label{fig:closedform_ICP}
 \end{figure}
+
+En revanche, comme le montre la figure \ref{fig:CFICP:time}, le temps d'exécution est beaucoup plus long avec le framework GICP. Cette forte différence s'explique par l'utilisation d'une méthode de Quasi-newton pour a minimisation de l'énergie dans le framework GICP qui est très longue tandis que la minimisation est explicite dans la formule analytique de l'ICP.
