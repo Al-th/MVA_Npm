@@ -101,6 +101,7 @@ disp('Computing transform with sICP');
 disp('Computing transform with gICP');
 [A_trans_GICP,transformation_evolution_GICP,size_subset_GICP, error_pos_GICP] = minimization(A,covA,B,covB,gtTransform,initTransform,30,200,true);
 
+
 %%
 disp('Computing transform with closed-form ICP');
 [A_trans_Closedform, evol_transform_Closedform ,size_subset_Closedform]= ICP_ClosedForm(A,B,initTransform,150,200);

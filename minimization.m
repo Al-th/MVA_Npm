@@ -58,6 +58,7 @@ function [A_trans, transformation_evolution, size_subset, error_pos] = minimizat
         hold on
         ind = [1:step:size(A_trans,1)];
         scatter3(A_trans(ind,1),A_trans(ind,2),A_trans(ind,3),15,'o','filled');
+        view(184,-4);
         hold off;
         pause(0.01);
 
