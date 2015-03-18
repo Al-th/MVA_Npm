@@ -64,7 +64,21 @@ L'absence d'occlusion, l'échantillonnage identique, et l'absence d'outliers ent
 
 Au contraire, sur les données réelles, on peut voir que l'erreur moyenne se dégrade pour l'ICP standard lorsque $d_{max}$ dépasse une certaine valeur, $d_{max}=200$ tandis que l'influence sur GICP reste très faible. En effet, de nombreux appariements sont inexactes lorsque la valeur de $d_{max}$ est élevée, ce qui à pour conséquence d'éloigner le résultat de la solution exacte. Pour GICP, ces appariements erronés contribue cependant très peu à la fonction de coût car les plans locaux à ces points ne sont pas forcément coplanaires (voir la figure \ref{fig_cov}). Ainsi, comme le montre la figure \ref{fig:err_dmax_reelle}, l'erreur moyenne est stable lorsque la valeur de $d_{max}$ augmente pour GICP tandis qu'elle se dégrade pour l'ICP standard.\\
 
+De plus on peut observer que l'erreur moyenne obtenue par GICP est inférieure ou égale à celle obtenue par ICP standard, cela tend à mettre en évidence une meilleure performance de GICP par rapport à l'ICP Standard.\\
+
 \begin{figure}[!h]
+     \centering
+     \includegraphics[scale=0.4]{Images/Resultats/hannover_dmax200_diffconvergence.jpg}
+     \caption{Comparaison de la vitesse de convergence sur les données réelles pour $d_{max}=200$ entre GICP et ICP standard.}
+	\label{fig:GICP_convergence}
+\end{figure}
+
+Enfin, comme le montre la figure \ref{fig:GICP_convergence}, on constate que GICP converge beaucoup plus rapidement que l'ICP Standard. L'image \ref{fig:meshlab} montre la consolidation des nuages de points de la base Hannovre après recalage pour $d_{max} = 200$.
+
+
+
+
+\begin{figure}[H]
    \centering
    \begin{subfigure}[t]{.5\linewidth}
      \centering
@@ -78,21 +92,9 @@ Au contraire, sur les données réelles, on peut voir que l'erreur moyenne se d�
      \caption{Nuages après recalage}
    \end{subfigure}
    
-   \caption{A REMPLIR.}
+   \caption{Consolidation des nuages de points Hannovre avec GICP ($d_{max} = 200$).}
    \label{fig:meshlab}
 \end{figure}
-
-De plus on peut observer que l'erreur moyenne obtenue par GICP est inférieure ou égale à celle obtenue par ICP standard, cela tend à mettre en évidence une meilleure performance de GICP par rapport à l'ICP Standard.\\
-
-\begin{figure}[!h]
-     \centering
-     \includegraphics[scale=0.4]{Images/Resultats/hannover_dmax200_diffconvergence.jpg}
-     \caption{Comparaison de la vitesse de convergence sur les données réelles pour $d_{max}=200$ entre GICP et ICP standard.}
-	\label{fig:GICP_convergence}
-\end{figure}
-
-Enfin, comme le montre la figure \ref{fig:GICP_convergence}, on constate que GICP converge beaucoup plus rapidement que l'ICP Standard. 
-%TODO ajouter un commentaire sur le temps d'exécution GICP<<sICP car converge plus rapidement).
    
 \subsection{Étude de l'influence de l'offset}
 

@@ -44,7 +44,7 @@ disp('Computing transform with gICP');
 
 %%
 disp('Computing transform with closed-form ICP');
-[A_trans_Closedform, evol_transform_Closedform ,size_subset_Closedform]= ICP_ClosedForm(A,B,initTransform,150,0.1);
+[A_trans_Closedform, evol_transform_Closedform ,size_subset_Closedform]= ICP_closedForm(A,B,initTransform,150,0.1);
 
 
 %%
@@ -104,4 +104,4 @@ disp('Computing transform with gICP');
 
 %%
 disp('Computing transform with closed-form ICP');
-[A_trans_Closedform, evol_transform_Closedform ,size_subset_Closedform]= ICP_ClosedForm(A,B,initTransform,150,200);
+[A_trans_Closedform, evol_transform_Closedform ,size_subset_Closedform]= ICP_closedForm(A,B,initTransform,150,200);
