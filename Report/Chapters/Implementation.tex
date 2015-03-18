@@ -53,7 +53,7 @@ $T = \underset{T}{arg min} \sum_{i}{{d_{i}^{(\mathbf{T})}}^{T}(C_{i}^B + \mathbf
 \end{algorithm}
 
 Pour l'étape de recherche de correspondances entre les deux nuages de points, nous utilisons encore une structure de kd-tree. 
-En ce qui concerne la minimisation de l'énergie, nous avons utilisé la fonction matlab \textit{fminunc} de matlab (fonction de minimisation d'une fonction à plusieurs variables utilisant la méthode de Quasi-newton.)
+En ce qui concerne la minimisation de l'énergie, nous avons utilisé la fonction matlab \textit{fminunc} (fonction de minimisation d'une fonction à plusieurs variables utilisant la méthode de Quasi-newton.)
 Enfin, en ce qui concerne les matrices de covariances $C_{i}^{A}$ et $C_{i}^{B}$, elles dépendent des variante que l'on souhaite mettre en œuvre et sont décrites ci-dessous.
 
 \paragraph{Standard ICP}
@@ -76,7 +76,7 @@ C_{i}^B &=&
 
 \paragraph{Plane-to-plane ICP}
 
-Dans le cas de la variante \textit{Point-to-plane ICP}, nous avons utilisé l'astuce décrite dans \cite{bib_gicp} : \\
+Dans le cas de la variante \textit{Plane-to-plane ICP}, nous avons utilisé l'astuce décrite dans \cite{bib_gicp} : \\
 
 
 \begin{algorithm}[H]
