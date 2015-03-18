@@ -1,4 +1,3 @@
-
 function [A_trans, transformation_evolution, size_subset, error_pos] = minimization(A,covA,B,covB,groundTruthTransformation,initTransform,iterMax,dMax,useGenICP)
 
     %figure(1);clf;figure(2);clf;figure(3);clf;
@@ -28,7 +27,7 @@ function [A_trans, transformation_evolution, size_subset, error_pos] = minimizat
     eps = 10000.0;
     lastDist = 10000;
     for i = 1:iterMax
-        [radtodeg(transformation(1:3)) transformation(4:6)]
+        [radtodeg(transformation(1:3)) transformation(4:6)];
          
         
         if (abs(eps) < 5e-5)
@@ -91,7 +90,7 @@ function [A_trans, transformation_evolution, size_subset, error_pos] = minimizat
                param{2}.cov(nbSubset,:,:) = covB(closestPointIndexInB(j),:,:);
             end
         end
-        size_subset = [size_subset nbSubset]
+        size_subset = [size_subset nbSubset];
         % Reduce param to subset only
         param{1}.point = param{1}.point(1:nbSubset,:);
         param{2}.point = param{2}.point(1:nbSubset,:);
@@ -100,23 +99,23 @@ function [A_trans, transformation_evolution, size_subset, error_pos] = minimizat
 
         f = @(x)costFunction(x,param);
   
-        [transformation, dist] = fminunc(f,transformation,struct('Display', 'off', 'LargeScale','off','TolFun',1e-6,'TolX',1e-10));
+        [transformation, dist] = fminunc(f,transformation,struct('Display', 'iter', 'LargeScale','off','TolFun',1e-6,'TolX',1e-10));
         eps = lastDist - dist;
         lastDist = dist;
         
-         figure(2);
-         hold on;
-         plot(i,radtodeg(transformation(1))-groundTruthTransformation(1),'ro');
-         plot(i,radtodeg(transformation(2))-groundTruthTransformation(2),'go');
-         plot(i,radtodeg(transformation(3))-groundTruthTransformation(3),'bo');
-         hold off;
-         
-         figure(3);
-         hold on;
-         plot(i,transformation(4)-groundTruthTransformation(4),'ro');
-         plot(i,transformation(5)-groundTruthTransformation(5),'go');
-         plot(i,transformation(6)-groundTruthTransformation(6),'bo');
-         hold off;
+%          figure(2);
+%          hold on;
+%          plot(i,radtodeg(transformation(1))-groundTruthTransformation(1),'ro');
+%          plot(i,radtodeg(transformation(2))-groundTruthTransformation(2),'go');
+%          plot(i,radtodeg(transformation(3))-groundTruthTransformation(3),'bo');
+%          hold off;
+%          
+%          figure(3);
+%          hold on;
+%          plot(i,-transformation(4)-groundTruthTransformation(4),'ro');
+%          plot(i,transformation(5)-groundTruthTransformation(5),'go');
+%          plot(i,transformation(6)-groundTruthTransformation(6),'bo');
+%          hold off;
 
        
 
